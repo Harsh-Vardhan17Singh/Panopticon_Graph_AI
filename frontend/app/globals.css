@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #131315;
+  --color-surface-dim: #131315;
+  --color-surface-bright: #39393b;
+  --color-surface-container-lowest: #0e0e10;
+  --color-surface-container-low: #1c1b1d;
+  --color-surface-container: #201f22;
+  --color-surface-container-high: #2a2a2c;
+  --color-surface-container-highest: #353437;
+  --color-on-surface: #e5e1e4;
+  --color-on-surface-variant: #c4c7c8;
+  --color-inverse-surface: #e5e1e4;
+  --color-inverse-on-surface: #313032;
+  --color-outline: #8e9192;
+  --color-outline-variant: #444748;
+  --color-surface-tint: #c6c6c7;
+  --color-primary: #ffffff;
+  --color-on-primary: #2f3131;
+  --color-primary-container: #e2e2e2;
+  --color-on-primary-container: #636565;
+  --color-inverse-primary: #5d5f5f;
+  --color-secondary: #c6c6cf;
+  --color-on-secondary: #2f3037;
+  --color-secondary-container: #45464e;
+  --color-on-secondary-container: #b4b4bd;
+  --color-tertiary: #ffffff;
+  --color-on-tertiary: #303033;
+  --color-tertiary-container: #e4e1e5;
+  --color-on-tertiary-container: #656467;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-background: #09090b;
+  --color-on-background: #e5e1e4;
+  --color-surface-variant: #353437;
+
+  --font-geist: var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
+
+  --radius-sm: 0.125rem;
+  --radius-default: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+}
+
+@layer base {
+  body {
+    background: #09090b;
+    color: #e5e1e4;
+    font-family: var(--font-geist-sans), sans-serif;
+  }
+}
+
+/* Glassmorphism custom classes */
+.glass-card {
+  position: relative;
+  background: linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)) padding-box,
+              linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02)) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+}
+
+.glass-card-elevated {
+  position: relative;
+  background: linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)) padding-box,
+              linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.03)) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(25px);
+  border-radius: 12px;
+}
+
+.glass-button-secondary {
+  position: relative;
+  background: linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)) padding-box,
+              linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05)) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(12px);
+  border-radius: 4px;
+  color: #ffffff;
+  transition: all 0.2s ease-in-out;
+}
+
+.glass-button-secondary:hover {
+  background: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)) padding-box,
+              linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.15)) border-box;
+  border: 1px solid transparent;
+  transform: translateY(-1px);
+}
+
+.glass-input {
+  background: transparent;
+  border-bottom: 1px solid #27272a;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  border-radius: 0;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-bottom-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.02);
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.01));
+}
+
+/* Hide scrollbar for clean terminal */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
