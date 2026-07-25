@@ -52,3 +52,32 @@ Our goal is to build an enterprise-grade Fraud Intelligence Platform that provid
 - AWS
 
 ---
+
+# 📁 Project Structure
+
+```
+Panopticon/
+
+├── frontend/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── db/
+│   │   ├── graph/
+│   │   ├── middleware/
+│   │   ├── ml/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── main.py
+│   │
+│   ├── tests/
+│   └── venv/
+│
+└── README.md
+```
+
+---
