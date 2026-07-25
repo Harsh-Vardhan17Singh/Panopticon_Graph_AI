@@ -142,3 +142,117 @@ Response
 ```
 
 ---
+
+# 🗂️ Database Models
+
+Current Models
+
+- User
+- Organisation
+
+Upcoming Models
+
+- Account
+- Device
+- Merchant
+- Transaction
+- Fraud Case
+- Alert
+- Investigation
+
+---
+
+# 🛣️ Development Roadmap
+
+## Phase 1 — Foundation ✅
+
+- Backend Structure
+- FastAPI
+- SQLAlchemy
+- Initial Models
+
+---
+
+## Phase 2 — Fraud Domain
+
+- Account Model
+- Device Model
+- Merchant Model
+- Transaction Model
+- Fraud Case Model
+- Alert Model
+
+---
+
+## Phase 3 — Authentication
+
+- JWT Authentication
+- User Roles
+- Organisation Management
+- RBAC
+
+---
+
+## Phase 4 — Graph Intelligence
+
+- Neo4j Integration
+- Graph Builder
+- Community Detection
+- Graph APIs
+
+---
+
+## Phase 5 — AI Engine
+
+- Graph Neural Networks
+- Risk Scoring
+- Explainable AI
+- Fraud Prediction
+
+---
+
+## Phase 6 — Dashboard
+
+- Authentication UI
+- Fraud Monitoring
+- Graph Explorer
+- Analytics
+- Case Management
+
+---
+
+## Phase 7 — Production
+
+- Docker
+- CI/CD
+- Cloud Deployment
+- Monitoring
+- Documentation
+
+---
+
+# 🎯 Long-Term Goal
+
+Panopticon aims to become an enterprise platform that enables banks, fintech companies, payment gateways, and digital financial institutions to detect sophisticated fraud networks using graph intelligence and machine learning.
+
+---
+
+# 👨‍💻 Status
+
+**Current Version**
+
+```
+v0.1.0-alpha
+```
+
+Project Status
+
+```
+🟢 Active Development
+```
+
+---
+
+# 📄 License
+
+This project is currently under development and is not licensed for public production use.
