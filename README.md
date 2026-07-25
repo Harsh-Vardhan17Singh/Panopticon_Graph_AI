@@ -81,3 +81,64 @@ Panopticon/
 ```
 
 ---
+
+# ✅ Current Progress
+
+### Backend
+
+- [x] FastAPI Project Setup
+- [x] Environment Configuration
+- [x] Versioned API Structure
+- [x] Health Check Endpoint
+- [x] SQLAlchemy Setup
+- [x] Database Session
+- [x] Base Model
+- [x] Database Initialisation
+- [x] User Model
+- [x] Organisation Model
+
+---
+
+### Frontend
+
+- [x] Next.js Initialised
+- [x] TypeScript
+- [x] Tailwind CSS
+- [x] Development Server Running
+
+---
+
+# 📡 Available API Endpoints
+
+## Root Endpoint
+
+```
+GET /
+```
+
+Response
+
+```json
+{
+  "message": "Panopticon API Running 🚀"
+}
+```
+
+---
+
+## Health Check
+
+```
+GET /api/v1/health
+```
+
+Response
+
+```json
+{
+  "status": "healthy",
+  "service": "Panopticon Backend"
+}
+```
+
+---
