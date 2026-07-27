@@ -1,12 +1,14 @@
-from fastapi import APIRouter
-
-router = APIRouter()
+from app.schemas.health import HealthResponse
 
 
-@router.get("/health", tags=["Health"])
+@router.get(
+    "/health",
+    response_model=HealthResponse,
+    tags=["Health"]
+)
 def health_check():
-    return {
-        "status": "healthy",
-        "service": "Panopticon Backend",
-        "version": "1.0.0"
-    }
+    return HealthResponse(
+        status="healthy",
+        service="Panopticon Backend",
+        version="1.0.0"
+    )
