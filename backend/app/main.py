@@ -1,20 +1,24 @@
 from fastapi import FastAPI
 
 from app.api.router import api_router
+from app.core.config import settings
 from app.db.init_db import create_tables
 
-app = FastAPI(
-    title="Panopticon API",
-    version="1.0.0",
-)
-
 create_tables()
+
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.VERSION,
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 app.include_router(api_router)
 
 
-@app.get("/")
+@app.get("/", tags=["Root"])
 def root():
     return {
-        "message": "Panopticon API Running 🚀"
+        "message": "Panopticon API Running 🚀",
+        "version": settings.VERSION
     }
