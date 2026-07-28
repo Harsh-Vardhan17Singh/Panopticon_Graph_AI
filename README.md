@@ -254,3 +254,53 @@ Response
 - Documentation
 
 ---
+
+# 📌 Commit History
+
+## v0.1.0-alpha
+
+- Initial repository structure
+- Frontend setup with Next.js
+- Backend setup with FastAPI
+- Environment configuration
+
+---
+
+## v0.2.0-alpha
+
+- SQLAlchemy integration
+- Database session
+- Base model
+- User model
+- Organisation model
+- Database initialisation
+- Modular API routing
+- Typed response schemas
+- Dependency structure
+- Backend architecture improvements
+
+---
+
+# 🎯 Long-Term Goal
+
+Panopticon aims to become an enterprise platform that enables banks, fintech companies, payment gateways, insurance providers, and digital financial institutions to detect sophisticated fraud networks using graph intelligence, machine learning, and explainable AI.
+
+---
+
+# 👨‍💻 Development Philosophy
+
+This project is being developed using a production-first approach.
+
+Every feature is designed to be:
+
+- Modular
+- Scalable
+- Maintainable
+- Enterprise-ready
+- AI-first
+
+---
+
+# 📄 License
+
+Currently under active development.
