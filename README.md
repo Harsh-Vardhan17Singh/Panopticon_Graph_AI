@@ -1,6 +1,6 @@
 # 🛡️ Panopticon
 
-> Enterprise Graph Intelligence Platform for Real-Time Financial Fraud Detection
+> Enterprise Graph Intelligence Platform for Real-Time Financial Fraud Detection.
 
 Panopticon is an enterprise-grade fraud intelligence platform designed to detect sophisticated financial fraud using Graph Intelligence, Graph Neural Networks (GNNs), Explainable AI, and interactive investigation tools.
 
