@@ -1,0 +1,12 @@
+from sqlalchemy import Column, Integer, String
+from app.db.base import Base
+
+
+class Merchant(Base):
+    __tablename__ = "merchants"
+
+    id = Column(Integer, primary_key=True, index=True)
+    merchant_name = Column(String, nullable=False)
+    category = Column(String)
+    city = Column(String)
+    country = Column(String)
