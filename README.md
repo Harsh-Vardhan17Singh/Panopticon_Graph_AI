@@ -16,7 +16,7 @@ Instead of analysing transactions individually, Panopticon builds a relationship
 
 Current Phase:
 
-> Backend Foundation Completed
+> Backend Foundation Completed ( Addition of models)
 
 ---
 
