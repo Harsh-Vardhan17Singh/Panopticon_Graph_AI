@@ -291,6 +291,9 @@ Panopticon aims to become an enterprise platform that enables banks, fintech com
 
 This project is being developed using a production-first approach.
 
+frontend is deployed at - Vercel 
+backend is deployed at - ( currently working on the backend file .)
+
 Every feature is designed to be:
 
 - Modular
@@ -300,6 +303,9 @@ Every feature is designed to be:
 - AI-first
 
 ---
+
+Report till 1 Aug 
+- The backend Development phase is active and done till model addition.
 
 # 📄 License
 
