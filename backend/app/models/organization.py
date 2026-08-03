@@ -13,3 +13,15 @@ class Organization(Base):
     industry = Column(String)
 
     country = Column(String)
+
+    users = relationship(
+        "User",
+        back_populates = "organizations",
+        cascade="all,delete-orphan"
+    )
+
+    accounts = relationship(
+        "Account",
+        back_populates="organization",
+        cascade="all,delete-orphan"
+    )

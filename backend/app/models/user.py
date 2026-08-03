@@ -10,8 +10,19 @@ class User(Base):
 
     full_name = Column(String, nullable=False)
 
-    email = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True,nullable=False)
 
-    password = Column(String)
+    password = Column(String,nullable=False)
 
-    role = Column(String, default="analyst")
+    role = Column(String, default="analyst",nullable=False)
+
+    organization_id = Column(
+        Integer,
+        ForeignKey("Organization.id"),
+        nullable = False
+    )
+
+    organization = relationship(
+        "Organization",
+        back_populates = "User"
+    )
