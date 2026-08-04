@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+
 from app.db.base import Base
 
 
@@ -7,7 +9,11 @@ class Device(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    device_id = Column(String, unique=True, nullable=False)
+    device_id = Column(
+        String,
+        unique=True,
+        nullable=False
+    )
 
     device_type = Column(String)
 
@@ -17,5 +23,5 @@ class Device(Base):
 
     transactions = relationship(
         "Transaction",
-        back_populated="device"
+        back_populates="device"
     )

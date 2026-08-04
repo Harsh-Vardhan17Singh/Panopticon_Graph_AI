@@ -7,9 +7,16 @@ from app.db.base import Base
 class Organization(Base):
     __tablename__ = "organizations"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
-    name = Column(String, nullable=False)
+    name = Column(
+        String,
+        nullable=False
+    )
 
     industry = Column(String)
 
@@ -17,12 +24,12 @@ class Organization(Base):
 
     users = relationship(
         "User",
-        back_populates = "organizations",
-        cascade="all,delete-orphan"
+        back_populates="organization",
+        cascade="all, delete-orphan"
     )
 
     accounts = relationship(
         "Account",
         back_populates="organization",
-        cascade="all,delete-orphan"
+        cascade="all, delete-orphan"
     )
