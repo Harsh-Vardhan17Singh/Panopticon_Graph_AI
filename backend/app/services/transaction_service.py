@@ -1,53 +1,40 @@
-from datetime import datetime
-from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
 
-class TransactionCreate(BaseModel):
+from app.models.transaction import Transaction
+from app.schemas.transaction import TransactionCreate
+
+
+class TransactionService:
     """
-    Request model used when creating a new transaction.
+    Handles all business logic related to transactions.
     """
 
-    transaction_id:str = Field(
-        ...,
-        description="Unique transaction ID"
+    def create_transaction(
+        self,
+        db: Session,
+        transaction: TransactionCreate,
+    ) -> Transaction:
+        """
+        Creates a new transaction in the database.
+        """
+
+        db_transaction = Transaction(
+            transaction_id=transaction.transaction_id,
+            amount=transaction.amount,
+            currency=transaction.currency,
+            account_id=transaction.account_id,
+            merchant_id=transaction.merchant_id,
+            device_id=transaction.device_id,
+            status="SUCCESS"
         )
 
-    amount:float = Field(
-        ...,
-        gt=0,
-        description="Transaction amount"
-    )
+        db.add(db_transaction)
 
-    currency: str = Field(
-        default="INR",
-        description="Currency Code"
-    )
+        db.commit()
 
-    account_id: int =Field(
-        ...,
-        description="Account ID"
-    )
+        db.refresh(db_transaction)
 
-    merchant_id: int = Field(
-        ...,
-        description="Merchant ID"
-    )
+        return db_transaction
 
-    device_id:int = Field(
-        ...,
-        description="Device ID"
-    )
 
-class TransactionResponse(BaseModel):
-    """
-    Response model returned after creating a transaction.
-    """
-
-    id:int 
-    transaction_id:str
-    amount:float
-    currency:str
-    status:str
-    creaated_at:datetime
-
-    class Config:
-        from_attributes = True
+transaction_service = TransactionService()
