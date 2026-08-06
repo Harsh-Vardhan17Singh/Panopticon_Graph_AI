@@ -204,6 +204,7 @@ Response
 - Fraud Case Model
 - Alert Model
 - Relationships(Development Report till 1 Aug)
+- Added Transaction model in Backend Foundation
 
 ---
 
