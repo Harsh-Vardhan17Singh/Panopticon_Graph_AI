@@ -18,6 +18,11 @@ class Transaction(Base):
 
     currency = Column(String, default="INR",nullable=False)
 
+    transaction_type = Column(
+        String,
+        nullable=False
+    )
+
     status = Column(String, default="SUCCESS",nullable=False)
 
     created_at = Column(DateTime, default=datetime.utcnow,nullable=False)
@@ -39,6 +44,11 @@ class Transaction(Base):
     )
 
     account = relationship(
+        "Account",
+        back_populates="transactions"
+    )
+
+    merchant = relationship(
         "Account",
         back_populates="transactions"
     )
