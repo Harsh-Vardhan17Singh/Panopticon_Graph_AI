@@ -1,17 +1,19 @@
 from datetime import datetime
+
 from pydantic import BaseModel, Field
+
 
 class TransactionCreate(BaseModel):
     """
-    Request model used when creating a new transaction.
+    Data required to create a transaction.
     """
 
-    transaction_id:str = Field(
+    transaction_id: str = Field(
         ...,
         description="Unique transaction ID"
-        )
+    )
 
-    amount:float = Field(
+    amount: float = Field(
         ...,
         gt=0,
         description="Transaction amount"
@@ -19,10 +21,10 @@ class TransactionCreate(BaseModel):
 
     currency: str = Field(
         default="INR",
-        description="Currency Code"
+        description="Currency code"
     )
 
-    account_id: int =Field(
+    account_id: int = Field(
         ...,
         description="Account ID"
     )
@@ -32,27 +34,29 @@ class TransactionCreate(BaseModel):
         description="Merchant ID"
     )
 
-    device_id:int = Field(
+    device_id: int = Field(
         ...,
         description="Device ID"
     )
 
-    transaction_type:str = Field(
+    transaction_type: str = Field(
         ...,
-        description="Transaction Type"
+        description="Transaction type"
     )
+
 
 class TransactionResponse(BaseModel):
     """
-    Response model returned after creating a transaction.
+    Data returned to the client for a transaction.
     """
 
-    id:int 
-    transaction_id:str
-    amount:float
-    currency:str
-    status:str
-    creaated_at:datetime
+    id: int
+    transaction_id: str
+    amount: float
+    currency: str
+    transaction_type: str
+    status: str
+    created_at: datetime
 
     class Config:
         from_attributes = True
