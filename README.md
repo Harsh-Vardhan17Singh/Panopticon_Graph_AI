@@ -12,6 +12,8 @@ Instead of analysing transactions individually, Panopticon builds a relationship
 
 **Version:** `v0.2.0-alpha`(working on v3 and done wuth model addition)
 
+in addition to the new changes file Working on V3
+
 **Status:** 🟢 Active Development
 
 Current Phase:
