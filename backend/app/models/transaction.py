@@ -49,7 +49,7 @@ class Transaction(Base):
     )
 
     merchant = relationship(
-        "Account",
+        "Merchant",
         back_populates="transactions"
     )
 
