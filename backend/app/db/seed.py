@@ -35,3 +35,24 @@ def seed_database():
             status="ACTIVE",
             organization_id=organization.id,
         )
+
+        #Create merchant 
+        merchant = Merchant(
+            merchant_name="Demo Electronics Store",
+            category="Electronics",
+            city="New Delhi",
+            country="india",
+        )
+
+        #Create Device
+
+        device = Device(
+            device_id="DEVICE-DEMO-001",
+            device_type="Mobile",
+            operating_system="Android",
+            ip_address="192.168.1.100",
+        )
+
+        db.add(account)
+        db.add(merchant)
+        db.add(device)
