@@ -56,3 +56,20 @@ def seed_database():
         db.add(account)
         db.add(merchant)
         db.add(device)
+
+        db.commit()
+
+        print("Development data created successfully.")
+        print(f"Organization ID: {organization.id}")
+        print(f"Account ID : {account.id}")
+        print(f"Merchant ID: { merchant.id}")
+        print(f"Device ID : {device.id}")
+
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
+
+if __name__ == "__main__":
+    seed_database()
