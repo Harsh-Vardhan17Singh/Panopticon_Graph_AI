@@ -17,7 +17,7 @@ class Merchant(Base):
 
     country = Column(String)
 
-    transaction = relationship(
+    transactions = relationship(
         "Transaction",
         back_populates="merchant"
     )

@@ -52,7 +52,7 @@ class Transaction(Base):
         "Merchant",
         back_populates="transactions"
     )
-
+ 
     device = relationship(
         "Device",
         back_populates="transactions"

@@ -1,11 +1,16 @@
 from app.db.session import SessionLocal
+from app.db.init_db import create_tables
+
+import app.models
+
 from app.models.organization import Organization
 from app.models.account import Account
 from app.models.merchant import Merchant
 from app.models.device import Device
 
 def seed_database():
-    db = SessionalLocal()
+    create_tables()
+    db = SessionLocal()
 
     try:
         #check whether development data already exists
