@@ -40,5 +40,18 @@ class TransactionService:
 
         return transactions
 
+    def get_transaction_by_id(
+        self,
+        db: Session,
+        transaction_id: int,
+    ) -> Transaction | None:
+        transaction = (
+            db.query(Transaction)
+            .filter(Transaction.id == transaction_id)
+            .first()
+        )
+
+        return transaction
+
 
 transaction_service = TransactionService()
