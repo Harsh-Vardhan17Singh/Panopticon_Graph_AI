@@ -32,5 +32,13 @@ class TransactionService:
 
         return db_transaction
 
+    def get_transactions(
+        self,
+        db: Session,
+    ) -> list[Transaction]:
+        transactions = db.query(Transaction).all()
+
+        return transactions
+
 
 transaction_service = TransactionService()
