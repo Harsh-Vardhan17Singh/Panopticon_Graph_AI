@@ -32,3 +32,19 @@ def create_transaction(
         db=db,
         transaction=transaction,
     )
+
+@router.get(
+    "",
+    response_model-list[TransactionResponse],
+    status_code=status.HTTP_200_OK,
+)
+def get_transaction(
+    db: Session = Depends(get_db),
+):
+    """
+    Get all financial transactions.
+    """
+
+    return transaction_service.get_transactions(
+        db=db,
+    )
