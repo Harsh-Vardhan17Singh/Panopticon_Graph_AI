@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.db.dependencies import get_db
 from app.schemas.transaction import (
     TransactionCreate,
+    TransactionUpdate,
     TransactionResponse,
 )
 from app.services.transaction_service import transaction_service
@@ -96,3 +97,64 @@ def get_transaction_by_id(
         )
 
     return transaction
+
+
+@router.put(
+    "/{transaction_id}",
+    response_model=TransactionResponse,
+    status_code=status.HTTP_200_OK,
+)
+def update_transaction(
+    transaction_id: int,
+    transaction_update: TransactionUpdate,
+    db: Session = Depends(get_db),
+):
+    """
+    Update an existing transaction.
+    """
+
+    transaction = transaction_service.get_transaction_by_id(
+        db=db,
+        transaction_id=transaction_id,
+    )
+
+    if transaction is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
+
+    return transaction_service.update_transaction(
+        db=db,
+        transaction=transaction,
+        transaction_update=transaction_update,
+    )
+
+
+@router.delete(
+    "/{transaction_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_transaction(
+    transaction_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Delete an existing transaction.
+    """
+
+    transaction = transaction_service.get_transaction_by_id(
+        db=db,
+        transaction_id=transaction_id,
+    )
+
+    if transaction is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
+
+    transaction_service.delete_transaction(
+        db=db,
+        transaction=transaction,
+    )

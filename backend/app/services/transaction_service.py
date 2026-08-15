@@ -1,7 +1,10 @@
 from sqlalchemy.orm import Session
 
 from app.models.transaction import Transaction
-from app.schemas.transaction import TransactionCreate
+from app.schemas.transaction import (
+    TransactionCreate,
+    TransactionUpdate,
+)
 
 
 class TransactionService:
@@ -77,6 +80,40 @@ class TransactionService:
         )
 
         return transaction
+
+    def update_transaction(
+        self,
+        db: Session,
+        transaction: Transaction,
+        transaction_update: TransactionUpdate,
+    ) -> Transaction:
+        """
+        Update only the fields provided by the client.
+        """
+
+        update_data = transaction_update.model_dump(
+            exclude_unset=True
+        )
+
+        for field, value in update_data.items():
+            setattr(transaction, field, value)
+
+        db.commit()
+        db.refresh(transaction)
+
+        return transaction
+
+    def delete_transaction(
+        self,
+        db: Session,
+        transaction: Transaction,
+    ) -> None:
+        """
+        Permanently delete a transaction from the database.
+        """
+
+        db.delete(transaction)
+        db.commit()
 
 
 transaction_service = TransactionService()

@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -42,6 +43,33 @@ class TransactionCreate(BaseModel):
     transaction_type: str = Field(
         ...,
         description="Transaction type"
+    )
+
+
+class TransactionUpdate(BaseModel):
+    """
+    Data allowed to be updated for a transaction.
+    """
+
+    amount: Optional[float] = Field(
+        default=None,
+        gt=0,
+        description="Updated transaction amount"
+    )
+
+    currency: Optional[str] = Field(
+        default=None,
+        description="Updated currency code"
+    )
+
+    transaction_type: Optional[str] = Field(
+        default=None,
+        description="Updated transaction type"
+    )
+
+    status: Optional[str] = Field(
+        default=None,
+        description="Updated transaction status"
     )
 
 
