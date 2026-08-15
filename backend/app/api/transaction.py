@@ -59,7 +59,7 @@ def get_transaction_by_id(
     db: Session = Depends(get_db),
 ):
     """
-    Get a Single Transaction by its DB ID.
+    Get a Single Transaction by its Database ID.
     """
 
     transaction = transaction_service.get_transaction_by_id(
