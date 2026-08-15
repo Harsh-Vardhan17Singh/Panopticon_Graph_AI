@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException ,  status
 from sqlalchemy.orm import Session
 
 from app.db.dependencies import get_db
@@ -48,3 +48,27 @@ def get_transaction(
     return transaction_service.get_transactions(
         db=db,
     )
+
+@router.get(
+    "/{transaction_id}",
+    response_model-TransactionResponse,
+    status_code=status.HTTP_200_OK,
+)
+def get_transaction_by_id(
+    transaction_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Get a Single Transaction by its DB ID.
+    """
+
+    transaction = transaction_service.get_transaction_by_id(
+        db=db,
+        transaction_id=transaction_id,
+    )
+    if transaction is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not Found"
+        )
+    return transaction
