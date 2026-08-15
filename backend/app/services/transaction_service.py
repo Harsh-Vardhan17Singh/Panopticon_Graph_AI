@@ -35,8 +35,32 @@ class TransactionService:
     def get_transactions(
         self,
         db: Session,
+        status: str | None = None,
+        account_id: int | None = None,
+        transaction_type: str | None = None,
+        skip: int = 0,
+        limit: int = 10,
     ) -> list[Transaction]:
-        transactions = db.query(Transaction).all()
+
+        query = db.query(Transaction)
+
+        if status is not None:
+            query = query.filter(Transaction.status == status)
+
+        if account_id is not None:
+            query = query.filter(Transaction.account_id == account_id)
+
+        if transaction_type is not None:
+            query = query.filter(
+                Transaction.transaction_type == transaction_type
+            )
+
+        transactions = (
+            query
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
         return transactions
 
@@ -45,6 +69,7 @@ class TransactionService:
         db: Session,
         transaction_id: int,
     ) -> Transaction | None:
+
         transaction = (
             db.query(Transaction)
             .filter(Transaction.id == transaction_id)
