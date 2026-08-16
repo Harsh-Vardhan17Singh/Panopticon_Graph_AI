@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 from jose import JWTError, jwt
-from passlib.context import CeyptContext
+from passlib.context import CryptContext
 
 SECRET_KEY = "change-this-to-a-long-random-string-key"
 ALGORITHM = "HS256"
@@ -14,7 +14,7 @@ pwd_context = CryptContext(
 
 def hash_password(password: str) -> str:
     """
-    HAsh A plain password before storing in the DB.
+    Hash A plain password before storing in the DB.
     """
 
     return pwd_context.hash(password)
@@ -41,7 +41,7 @@ def create_access_token(
     to_encode = data.copy()
 
     if expire_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = datetime.now(timezone.utc) + expire_delta
     else:
         expire = (
             datetime.now(timezone.utc)
@@ -55,7 +55,7 @@ def create_access_token(
     encoded_jwt = jwt.encode(
         to_encode,
         SECRET_KEY,
-        algorith=ALGORITHM,
+        algorithm=ALGORITHM,
     )
 
     return encoded_jwt

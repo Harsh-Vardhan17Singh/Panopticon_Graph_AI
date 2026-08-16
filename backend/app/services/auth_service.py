@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.security import (
-    create_access_tooken,
+    create_access_token,
     hash_password,
     verify_password,
 )
@@ -88,4 +88,4 @@ class AuthService:
         )
 
         return access_token
-    auth_service = AuthService()
+auth_service = AuthService()
