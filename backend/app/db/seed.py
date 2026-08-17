@@ -143,7 +143,6 @@ def seed_database():
             print("Admin user created.")
         else:
             print("Admin user already exists.")
-
         db.commit()
 
         print("\nDevelopment database setup completed.")
