@@ -25,6 +25,26 @@ class Transaction(Base):
 
     status = Column(String, default="SUCCESS",nullable=False)
 
+    # Fraud Risk Analysis
+
+    risk_score = Column(
+        Integer,
+        default=0,
+        nullable=False,
+    )
+
+    risk_level = Column(
+        String,
+        default="LOW",
+        nullable=False,
+    )
+
+    is_suspicious = Column(
+        Integer,
+        default=0,
+        nullable=False,
+    )
+
     created_at = Column(DateTime, default=datetime.utcnow,nullable=False)
 
     account_id = Column(
