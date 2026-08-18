@@ -1,41 +1,59 @@
 # 🛡️ Panopticon
 
-> Enterprise Graph Intelligence Platform for Real-Time Financial Fraud Detection.
+> Enterprise Financial Fraud Detection and Intelligence Platform.
 
-Panopticon is an enterprise-grade fraud intelligence platform designed to detect sophisticated financial fraud using Graph Intelligence, Graph Neural Networks (GNNs), Explainable AI, and interactive investigation tools.
+Panopticon is a fraud intelligence platform designed to help identify suspicious financial activity through transaction monitoring, risk scoring, authentication, role-based access control, and future Graph Intelligence and AI capabilities.
 
-Instead of analysing transactions individually, Panopticon builds a relationship graph between users, accounts, devices, merchants, IP addresses, and transactions to identify coordinated fraud rings that traditional systems often miss.
+The platform is being developed as a full-stack application with a Next.js frontend and FastAPI backend.
+
+Instead of treating every transaction as an isolated event, the long-term goal of Panopticon is to analyze relationships between accounts, users, devices, merchants, IP addresses, and transactions to identify suspicious patterns and coordinated fraud networks.
 
 ---
 
 # 🚀 Current Status
 
-**Version:** `v0.2.0-alpha`(working on v3 and done wuth model addition)
-
-in addition to the new changes file Working on V3
+**Version:** `v0.3.0-alpha`
 
 **Status:** 🟢 Active Development
 
-Current Phase:
+**Current Phase:**
+> Backend Fraud Detection Foundation completed. Currently preparing frontend and backend integration.
 
-> Backend Foundation Completed ( Addition of models)
+### Current Progress
+
+- ✅ Core backend architecture
+- ✅ Database models and relationships
+- ✅ JWT authentication
+- ✅ Role-Based Access Control
+- ✅ Transaction APIs
+- ✅ Automatic rule-based risk scoring
+- ✅ LOW / MEDIUM / HIGH risk classification
+- ✅ Suspicious transaction detection
+- ✅ Transaction filtering and pagination
+- 🚧 Dashboard API
+- 🚧 Frontend-backend integration
+- ⏳ Graph Intelligence
+- ⏳ AI / ML fraud detection
 
 ---
 
 # 📌 Vision
 
-Our goal is to build an enterprise SaaS platform capable of:
+Panopticon aims to become an enterprise fraud intelligence platform capable of:
 
-- Real-Time Fraud Detection
+- Real-Time Transaction Monitoring
+- Fraud Detection
+- Risk Scoring
+- Suspicious Transaction Detection
 - Fraud Ring Detection
 - Graph Intelligence
+- Graph Neural Networks
 - Explainable AI
 - Interactive Investigation Dashboard
+- Fraud Alerts
 - Case Management
 - Analytics
 - Enterprise APIs
-- transaction scheme 
-- API transaction folder 
 
 ---
 
@@ -43,21 +61,24 @@ Our goal is to build an enterprise SaaS platform capable of:
 
 ## Frontend
 
-- Next.js 16
+- Next.js
 - React
 - TypeScript
 - Tailwind CSS
-- Three.js (Upcoming)
 - Framer Motion
+- Three.js *(planned for advanced visualisation)*
 
 ## Backend
 
 - FastAPI
-- SQLAlchemy
 - Python
-- SQLite (Development)
+- SQLAlchemy
+- Pydantic
+- JWT Authentication
+- Passlib / Bcrypt
+- SQLite *(Development Database)*
 
-## Future
+## Planned Infrastructure
 
 - PostgreSQL
 - Neo4j
@@ -73,246 +94,30 @@ Our goal is to build an enterprise SaaS platform capable of:
 
 ```text
 Panopticon/
-
+│
 ├── frontend/
+│   ├── app/
+│   ├── public/
+│   ├── package.json
+│   └── README.md
 │
 ├── backend/
 │   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── db/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── graph/
+│   │   ├── ml/
+│   │   ├── middleware/
+│   │   ├── utils/
+│   │   └── main.py
 │   │
-│   ├── api/
-│   ├── core/
-│   ├── db/
-│   ├── graph/
-│   ├── middleware/
-│   ├── ml/
-│   ├── models/
-│   ├── schemas/
-│   ├── services/
-│   ├── utils/
-│   │
-│   └── main.py
+│   ├── requirements.txt
+│   └── .env
 │
 ├── tests/
 │
 └── README.md
-```
-
----
-
-# ✅ Implemented Features
-
-## Backend
-
-- ✅ FastAPI Initialisation
-- ✅ Versioned API (`/api/v1`)
-- ✅ Health Check Endpoint
-- ✅ Environment Configuration
-- ✅ SQLAlchemy Configuration
-- ✅ Database Session
-- ✅ Database Initialisation
-- ✅ Base Model
-- ✅ User Model
-- ✅ Organisation Model
-- ✅ Modular Router Structure
-- ✅ Typed Response Schemas
-- ✅ Dependency Injection Structure
-- ✅ Constants Module
-
----
-
-## Frontend
-
-- ✅ Next.js Initialised
-- ✅ TypeScript
-- ✅ Tailwind CSS
-- ✅ Development Server Running
-
----
-
-# 📡 API Endpoints
-
-## Root
-
-```http
-GET /
-```
-
-Response
-
-```json
-{
-  "message": "Panopticon API Running 🚀",
-  "version": "1.0.0"
-}
-```
-
----
-
-## Health
-
-```http
-GET /api/v1/health
-```
-
-Response
-
-```json
-{
-  "status": "healthy",
-  "service": "Panopticon Backend",
-  "version": "1.0.0"
-}
-```
-
----
-
-# 🗃️ Database Models
-
-## Implemented
-
-- User
-- Organisation
-- Schema For Transaction in Backend Model
-
-## Planned
-
-- Account
-- Device
-- Merchant
-- Transaction
-- Fraud Case
-- Alert
-- Investigation
-
----
-
-# 🛣️ Development Roadmap
-
-## ✅ Phase 1 — Backend Foundation
-
-- FastAPI Setup
-- Project Structure
-- SQLAlchemy
-- Database Layer
-- Config Management
-- Health API
-- User & Organisation Models
-
----
-
-## 🚧 Phase 2 — Fraud Domain
-
-- Account Model
-- Device Model
-- Merchant Model
-- Transaction Model
-- Fraud Case Model
-- Alert Model
-- Relationships(Development Report till 1 Aug)
-- Added Transaction model in Backend Foundation
-
----
-
-## ⏳ Phase 3 — Authentication
-
-- JWT
-- Login
-- Signup
-- RBAC
-- Multi-Tenant Organisations
-
----
-
-## ⏳ Phase 4 — Graph Intelligence
-
-- Neo4j
-- Graph Builder
-- Community Detection
-- Graph APIs
-
----
-
-## ⏳ Phase 5 — AI Engine
-
-- Graph Neural Networks
-- Risk Scoring
-- Explainable AI
-- Fraud Prediction
-
----
-
-## ⏳ Phase 6 — Dashboard
-
-- Authentication UI
-- Fraud Monitoring
-- Graph Explorer
-- Analytics
-- Investigation Workspace
-
----
-
-## ⏳ Phase 7 — Production
-
-- Docker
-- CI/CD
-- Monitoring
-- Cloud Deployment
-- Documentation
-
----
-
-# 📌 Commit History
-
-## v0.1.0-alpha
-
-- Initial repository structure
-- Frontend setup with Next.js
-- Backend setup with FastAPI
-- Environment configuration
-
----
-
-## v0.2.0-alpha
-
-- SQLAlchemy integration
-- Database session
-- Base model
-- User model
-- Organisation model
-- Database initialisation
-- Modular API routing
-- Typed response schemas
-- Dependency structure
-- Backend architecture improvements
-
----
-
-# 🎯 Long-Term Goal
-
-Panopticon aims to become an enterprise platform that enables banks, fintech companies, payment gateways, insurance providers, and digital financial institutions to detect sophisticated fraud networks using graph intelligence, machine learning, and explainable AI.
-
----
-
-# 👨‍💻 Development Philosophy
-
-This project is being developed using a production-first approach.
-
-frontend is deployed at - Vercel 
-backend is deployed at - ( currently working on the backend file .)
-
-Every feature is designed to be:
-
-- Modular
-- Scalable
-- Maintainable
-- Enterprise-ready
-- AI-first
-
----
-
-Report till 1 Aug 
-- The backend Development phase is active and done till model addition.
-
-# 📄 License
-
-Currently under active development.
