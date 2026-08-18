@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.auth_dependencies import get_current_user
 from app.core.permissions import require_role
 from app.db.dependencies import get_db
 from app.models.user import User
@@ -50,6 +49,7 @@ def get_transactions(
     ),
     account_id: int | None = None,
     transaction_type: str | None = None,
+    risk_level: str | None = None,
     skip: int = Query(
         default=0,
         ge=0,
@@ -71,6 +71,36 @@ def get_transactions(
         status=status_filter,
         account_id=account_id,
         transaction_type=transaction_type,
+        risk_level=risk_level,
+        skip=skip,
+        limit=limit,
+    )
+
+
+@router.get(
+    "/suspicious",
+    response_model=list[TransactionResponse],
+    status_code=status.HTTP_200_OK,
+)
+def get_suspicious_transactions(
+    skip: int = Query(
+        default=0,
+        ge=0,
+    ),
+    limit: int = Query(
+        default=10,
+        ge=1,
+        le=100,
+    ),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("admin", "analyst")),
+):
+    """
+    Get all suspicious transactions.
+    """
+
+    return transaction_service.get_suspicious_transactions(
+        db=db,
         skip=skip,
         limit=limit,
     )

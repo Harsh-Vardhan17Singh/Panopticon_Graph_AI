@@ -16,13 +16,11 @@ class TransactionService:
         transaction: TransactionCreate,
     ) -> Transaction:
 
-        # Calculate fraud / risk information
         risk_result = risk_service.calculate_risk(
             amount=transaction.amount,
             transaction_type=transaction.transaction_type,
         )
 
-        # Create transaction with calculated risk data
         db_transaction = Transaction(
             transaction_id=transaction.transaction_id,
             amount=transaction.amount,
@@ -49,6 +47,7 @@ class TransactionService:
         status: str | None = None,
         account_id: int | None = None,
         transaction_type: str | None = None,
+        risk_level: str | None = None,
         skip: int = 0,
         limit: int = 10,
     ) -> list[Transaction]:
@@ -68,8 +67,30 @@ class TransactionService:
                 Transaction.transaction_type == transaction_type
             )
 
+        if risk_level is not None:
+            query = query.filter(
+                Transaction.risk_level == risk_level.upper()
+            )
+
         transactions = (
             query
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+        return transactions
+
+    def get_suspicious_transactions(
+        self,
+        db: Session,
+        skip: int = 0,
+        limit: int = 10,
+    ) -> list[Transaction]:
+
+        transactions = (
+            db.query(Transaction)
+            .filter(Transaction.is_suspicious == 1)
             .offset(skip)
             .limit(limit)
             .all()
