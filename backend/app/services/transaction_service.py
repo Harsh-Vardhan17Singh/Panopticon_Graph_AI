@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session
 
 from app.models.transaction import Transaction
-from app.schemas.transaction import (
-    TransactionCreate,
-    TransactionUpdate,
-)
+from app.schemas.transaction import TransactionCreate
+from app.services.risk_service import risk_service
 
 
 class TransactionService:
@@ -18,6 +16,13 @@ class TransactionService:
         transaction: TransactionCreate,
     ) -> Transaction:
 
+        # Calculate fraud / risk information
+        risk_result = risk_service.calculate_risk(
+            amount=transaction.amount,
+            transaction_type=transaction.transaction_type,
+        )
+
+        # Create transaction with calculated risk data
         db_transaction = Transaction(
             transaction_id=transaction.transaction_id,
             amount=transaction.amount,
@@ -27,6 +32,9 @@ class TransactionService:
             merchant_id=transaction.merchant_id,
             device_id=transaction.device_id,
             status="SUCCESS",
+            risk_score=risk_result["risk_score"],
+            risk_level=risk_result["risk_level"],
+            is_suspicious=int(risk_result["is_suspicious"]),
         )
 
         db.add(db_transaction)
@@ -51,7 +59,9 @@ class TransactionService:
             query = query.filter(Transaction.status == status)
 
         if account_id is not None:
-            query = query.filter(Transaction.account_id == account_id)
+            query = query.filter(
+                Transaction.account_id == account_id
+            )
 
         if transaction_type is not None:
             query = query.filter(
@@ -80,40 +90,6 @@ class TransactionService:
         )
 
         return transaction
-
-    def update_transaction(
-        self,
-        db: Session,
-        transaction: Transaction,
-        transaction_update: TransactionUpdate,
-    ) -> Transaction:
-        """
-        Update only the fields provided by the client.
-        """
-
-        update_data = transaction_update.model_dump(
-            exclude_unset=True
-        )
-
-        for field, value in update_data.items():
-            setattr(transaction, field, value)
-
-        db.commit()
-        db.refresh(transaction)
-
-        return transaction
-
-    def delete_transaction(
-        self,
-        db: Session,
-        transaction: Transaction,
-    ) -> None:
-        """
-        Permanently delete a transaction from the database.
-        """
-
-        db.delete(transaction)
-        db.commit()
 
 
 transaction_service = TransactionService()
