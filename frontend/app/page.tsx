@@ -150,6 +150,7 @@ export default function Home() {
   const [userId, setUserId] = useState("");
   const [secretCode, setSecretCode] = useState("");
   const [authError, setAuthError] = useState("");
+  const [accessToken, setAccessToken] = useState("");
 
   // --- Handshake sequence loader states ---
   const [handshakeLogs, setHandshakeLogs] = useState<string[]>([]);
@@ -166,6 +167,16 @@ export default function Home() {
   const [threatLevel, setThreatLevel] = useState("MINIMAL");
   const [activeAgents, setActiveAgents] = useState(6);
   const [ingestRate, setIngestRate] = useState(421.8);
+  const [dashboardData, setDashboardData] = useState<{
+  total_transactions: number;
+  total_transaction_amount: number;
+  low_risk_count: number;
+  medium_risk_count: number;
+  high_risk_count: number;
+  suspicious_transaction_count: number;
+  suspicious_transaction_amount: number;
+} | null>(null);
+
   const [recentTransactions, setRecentTransactions] = useState<{ id: string; from: string; to: string; amount: string; risk: number; time: string }[]>([
     { id: "TX-4209", from: "Ravi Kumar", to: "Priya Sharma", amount: "₹4,500", risk: 12, time: "20:30:12" },
     { id: "TX-4210", from: "Priya Sharma", to: "Vikram Patel", amount: "₹85,000", risk: 94, time: "20:30:45" },
@@ -209,6 +220,42 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+  if (!accessToken) return;
+
+  const fetchDashboardSummary = async () => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/v1/dashboard/summary",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error(
+          "Failed to fetch dashboard summary"
+        );
+        return;
+      }
+
+      const data = await response.json();
+
+      setDashboardData(data);
+
+    } catch (error) {
+      console.error(
+        "Dashboard fetch error:",
+        error
+      );
+    }
+  };
+
+  fetchDashboardSummary();
+}, [accessToken]);
 
   // Live transaction simulation inside dashboard
   useEffect(() => {
@@ -315,15 +362,47 @@ export default function Home() {
   }, [currentView]);
 
   // --- Actions ---
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (userId.trim().toLowerCase() === "admin" && secretCode.trim() === "panopticon") {
-      setAuthError("");
-      setCurrentView("handshake");
-    } else {
-      setAuthError("INVALID CREDENTIALS. Access denied to secure graph console.");
+ 
+  const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  setAuthError("");
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/v1/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: userId,
+          password: secretCode,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setAuthError(
+        data.detail || "INVALID CREDENTIALS. Access denied."
+      );
+      return;
     }
-  };
+
+    setAccessToken(data.access_token);
+    setCurrentView("handshake");
+
+  } catch (error) {
+    console.error("Login error:", error);
+
+    setAuthError(
+      "Unable to connect to Panopticon backend."
+    );
+  }
+};
 
   const handleLogout = () => {
     setCurrentView("landing");
@@ -583,11 +662,11 @@ export default function Home() {
 
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] text-[#A1A1AA] font-mono tracking-wider">OPERATOR ID</label>
+                <label className="text-[10px] text-[#A1A1AA] font-mono tracking-wider">EMAIL ADDRESS</label>
                 <input
                   type="text"
                   required
-                  placeholder="Enter operator ID (e.g. admin)"
+                  placeholder="Enter email (e.g. admin@panopticon.com)"
                   value={userId}
                   onChange={(e) => setUserId(e.target.value)}
                   className="glass-input py-2 px-1 text-xs font-mono"
@@ -758,36 +837,83 @@ export default function Home() {
                 <div className="flex flex-col gap-6">
                   {/* Top 4 widgets */}
                   <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div className="glass-card p-5 h-28 flex flex-col justify-between">
-                      <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">Ingest Speed</span>
-                      <div className="flex justify-between items-baseline mt-2">
-                        <span className="text-3xl font-extrabold font-geist text-white font-mono">{ingestRate.toFixed(1)} <span className="text-sm font-light text-[#A1A1AA]">Mb/s</span></span>
-                        <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
-                      </div>
-                    </div>
-                    <div className="glass-card p-5 h-28 flex flex-col justify-between">
-                      <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">Active Subagents</span>
-                      <div className="flex justify-between items-baseline mt-2">
-                        <span className="text-3xl font-extrabold font-geist text-white">{activeAgents}</span>
-                        <span className="font-mono text-[9px] text-[#A1A1AA]">SENTRY MODULES</span>
-                      </div>
-                    </div>
-                    <div className="glass-card p-5 h-28 flex flex-col justify-between">
-                      <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">GNN Audit Load</span>
-                      <div className="flex justify-between items-baseline mt-2">
-                        <span className="text-2xl font-extrabold font-geist text-white font-mono">{hostLoad}%</span>
-                        <span className="text-[9px] text-green-400 font-mono">NOMINAL</span>
-                      </div>
-                    </div>
-                    <div className="glass-card p-5 h-28 flex flex-col justify-between">
-                      <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">Network Threat Level</span>
-                      <div className="flex justify-between items-baseline mt-2">
-                        <span className={`text-2xl font-extrabold font-geist uppercase ${threatLevel === "CRITICAL" ? "text-red-400" : threatLevel === "ELEVATED" ? "text-yellow-400" : "text-white"}`}>{threatLevel}</span>
-                        <span className="font-mono text-[9px] text-[#A1A1AA]">LOUVAIN SCAN</span>
-                      </div>
-                    </div>
-                  </section>
 
+  <div className="glass-card p-5 h-28 flex flex-col justify-between">
+    <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">
+      Total Transactions
+    </span>
+
+    <div className="flex justify-between items-baseline mt-2">
+      <span className="text-3xl font-extrabold font-geist text-white">
+        {dashboardData
+          ? dashboardData.total_transactions
+          : "--"}
+      </span>
+
+      <span className="font-mono text-[9px] text-[#A1A1AA]">
+        PROCESSED
+      </span>
+    </div>
+  </div>
+
+
+  <div className="glass-card p-5 h-28 flex flex-col justify-between">
+    <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">
+      Transaction Volume
+    </span>
+
+    <div className="flex justify-between items-baseline mt-2">
+      <span className="text-2xl font-extrabold font-geist text-white">
+        ₹{dashboardData
+          ? dashboardData.total_transaction_amount.toLocaleString("en-IN")
+          : "--"}
+      </span>
+
+      <span className="font-mono text-[9px] text-[#A1A1AA]">
+        TOTAL
+      </span>
+    </div>
+  </div>
+
+
+  <div className="glass-card p-5 h-28 flex flex-col justify-between">
+    <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">
+      Suspicious Transactions
+    </span>
+
+    <div className="flex justify-between items-baseline mt-2">
+      <span className="text-3xl font-extrabold font-geist text-white">
+        {dashboardData
+          ? dashboardData.suspicious_transaction_count
+          : "--"}
+      </span>
+
+      <span className="font-mono text-[9px] text-[#A1A1AA]">
+        FLAGGED
+      </span>
+    </div>
+  </div>
+
+
+  <div className="glass-card p-5 h-28 flex flex-col justify-between">
+    <span className="font-mono text-[10px] text-[#A1A1AA] tracking-wider uppercase">
+      High Risk Transactions
+    </span>
+
+    <div className="flex justify-between items-baseline mt-2">
+      <span className="text-3xl font-extrabold font-geist text-white">
+        {dashboardData
+          ? dashboardData.high_risk_count
+          : "--"}
+      </span>
+
+      <span className="font-mono text-[9px] text-[#A1A1AA]">
+        HIGH RISK
+      </span>
+    </div>
+  </div>
+
+</section>
                   {/* Streaming feeds split grid */}
                   <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Live transactions feed */}
