@@ -399,7 +399,7 @@ export default function Home() {
       return;
     }
 
-    setAuthToken(data.access_token);
+    setAccessToken(data.access_token);
 localStorage.setItem("access_token", data.access_token);
 
 const profileResponse = await fetch(
