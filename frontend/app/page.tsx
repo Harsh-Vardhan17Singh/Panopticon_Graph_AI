@@ -151,6 +151,13 @@ export default function Home() {
   const [secretCode, setSecretCode] = useState("");
   const [authError, setAuthError] = useState("");
   const [accessToken, setAccessToken] = useState("");
+  const [currentUser, setCurrentUser] = useState<{
+  id: number;
+  full_name: string;
+  email: string;
+  role: string;
+  organization_id: number;
+} | null>(null);
 
   // --- Handshake sequence loader states ---
   const [handshakeLogs, setHandshakeLogs] = useState<string[]>([]);
@@ -393,7 +400,33 @@ export default function Home() {
     }
 
     setAccessToken(data.access_token);
-    setCurrentView("handshake");
+localStorage.setItem("access_token", data.access_token);
+
+const profileResponse = await fetch(
+  "http://127.0.0.1:8000/api/v1/auth/me",
+  {
+    headers: {
+      Authorization: `Bearer ${data.access_token}`,
+      Accept: "application/json",
+    },
+  }
+);
+
+const profileData = await profileResponse.json();
+
+if (!profileResponse.ok) {
+  localStorage.removeItem("access_token");
+
+  setAuthError(
+    profileData.detail || "Unable to verify user profile."
+  );
+
+  return;
+}
+
+setCurrentUser(profileData);
+
+setCurrentView("handshake");
 
   } catch (error) {
     console.error("Login error:", error);
