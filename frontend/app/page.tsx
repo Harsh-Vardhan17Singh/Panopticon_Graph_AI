@@ -197,8 +197,8 @@ export default function Home() {
   suspicious_transaction_amount: number;
 } | null>(null);
 
- const [transaction, setTransactions] = useState<TransactionData[]>([]);
- const [transactionError, setTransactionError] = useState(""); 
+const [transactions, setTransactions] = useState<TransactionData[]>([]);
+const [transactionsError, setTransactionsError] = useState("");
 
   const [recentTransactions, setRecentTransactions] = useState<{ id: string; from: string; to: string; amount: string; risk: number; time: string }[]>([
     { id: "TX-4209", from: "Ravi Kumar", to: "Priya Sharma", amount: "₹4,500", risk: 12, time: "20:30:12" },
