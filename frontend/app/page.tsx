@@ -280,6 +280,43 @@ export default function Home() {
   fetchDashboardSummary();
 }, [accessToken]);
 
+useEffect(() => {
+  const fetchTransactions = async () => {
+    if (!accessToken) return;
+
+    try {
+      setTransactionsError("");
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/v1/transactions?limit=10",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setTransactionsError(
+          data.detail || "Failed to load transactions."
+        );
+        return;
+      }
+
+      setTransactions(data);
+    } catch (error) {
+      console.error("Transaction fetch error:", error);
+      setTransactionsError(
+        "Unable to connect to transaction service."
+      );
+    }
+  };
+
+  fetchTransactions();
+}, [accessToken]);
+
   // Live transaction simulation inside dashboard
   useEffect(() => {
     if (currentView !== "portal" || activePortalTab !== "dashboard") return;
