@@ -1013,20 +1013,52 @@ setCurrentView("handshake");
                         LIVE TRANSACTION STREAMING INGRESS
                       </h3>
                       <div className="glass-card divide-y divide-white/5 overflow-hidden">
-                        {recentTransactions.map((tx, idx) => (
-                          <div key={idx} className="p-4 flex justify-between items-center hover:bg-white/[0.02] transition-colors">
-                            <div className="flex flex-col gap-1">
-                              <span className="text-xs font-mono font-bold text-white">{tx.from} &rarr; {tx.to}</span>
-                              <span className="text-[10px] text-[#A1A1AA] font-mono">HASH: {tx.id} // TIME: {tx.time}</span>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <span className="text-xs font-mono font-bold text-white">{tx.amount}</span>
-                              <span className={`px-2 py-0.5 font-mono text-[9px] font-bold rounded ${tx.risk > 80 ? "bg-red-950/40 text-red-400 border border-red-500/20" : tx.risk > 50 ? "bg-yellow-950/40 text-yellow-400 border border-yellow-500/20" : "bg-white/5 text-white/50"}`}>
-                                {tx.risk}% RISK
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                        {transactionsError ? (
+  <div className="p-4 text-xs font-mono text-red-400">
+    {transactionsError}
+  </div>
+) : transactions.length === 0 ? (
+  <div className="p-4 text-xs font-mono text-[#A1A1AA]">
+    NO TRANSACTIONS FOUND
+  </div>
+) : (
+  transactions.map((tx) => (
+    <div
+      key={tx.id}
+      className="p-4 flex justify-between items-center hover:bg-white/[0.02] transition-colors"
+    >
+      <div className="flex flex-col gap-1">
+        <span className="text-xs font-mono font-bold text-white">
+          {tx.transaction_type} → {tx.status}
+        </span>
+
+        <span className="text-[10px] text-[#A1A1AA] font-mono">
+          HASH: {tx.transaction_id} // TIME:{" "}
+          {new Date(tx.created_at).toLocaleTimeString()}
+        </span>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <span className="text-xs font-mono font-bold text-white">
+          {tx.currency === "INR" ? "₹" : tx.currency}{" "}
+          {tx.amount.toLocaleString("en-IN")}
+        </span>
+
+        <span
+          className={`px-2 py-0.5 font-mono text-[9px] font-bold rounded ${
+            tx.risk_score > 80
+              ? "bg-red-950/40 text-red-400 border border-red-500/20"
+              : tx.risk_score > 50
+              ? "bg-yellow-950/40 text-yellow-400 border border-yellow-500/20"
+              : "bg-white/5 text-white/50"
+          }`}
+        >
+          {tx.risk_level} // {tx.risk_score}
+        </span>
+      </div>
+    </div>
+  ))
+)}
                       </div>
                     </div>
 
