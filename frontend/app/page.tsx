@@ -13,6 +13,19 @@ interface LogEntry {
   status: "INFO" | "SUCCESS" | "WARN" | "CRITICAL";
 }
 
+type TransactionData = {
+  id: number;
+  transaction_id: string;
+  amount: number;
+  currency: string;
+  transaction_type: string;
+  status: string;
+  risk_score: number;
+  risk_level: string;
+  is_suspicious: number;
+  created_at: string;
+};
+
 interface GraphNode {
   id: string;
   label: string;
@@ -183,6 +196,9 @@ export default function Home() {
   suspicious_transaction_count: number;
   suspicious_transaction_amount: number;
 } | null>(null);
+
+ const [transaction, setTransactions] = useState<TransactionData[]>([]);
+ const [transactionError, setTransactionError] = useState(""); 
 
   const [recentTransactions, setRecentTransactions] = useState<{ id: string; from: string; to: string; amount: string; risk: number; time: string }[]>([
     { id: "TX-4209", from: "Ravi Kumar", to: "Priya Sharma", amount: "₹4,500", risk: 12, time: "20:30:12" },
@@ -438,9 +454,14 @@ setCurrentView("handshake");
 };
 
   const handleLogout = () => {
+    setAccessToken("");
+    setCurrentUser(null);
+    localStorage.removeItem("accesss_token");
+
     setCurrentView("landing");
     setUserId("");
     setSecretCode("");
+    setAuthError("");
   };
 
   const triggerSimulationEvent = (type: "FRAUD" | "NORMAL" | "LOUVAIN") => {
