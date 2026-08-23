@@ -1,11 +1,11 @@
-from fastapi import APIrouter,Depends, status
+from fastapi import APIRouter,Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.permission import require_role
+from app.core.permissions import require_role
 from app.db.dependencies import get_db
 from app.models.user import User
 from app.schemas.graph import GraphResponse
-from app.services.graph_service import fraph_service
+from app.services.graph_service import graph_service
 
 router = APIRouter(
     prefix="/graph",

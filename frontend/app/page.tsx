@@ -46,6 +46,24 @@ interface GraphEdge {
   type: "TRANSFERRED_TO" | "USED_DEVICE" | "CONNECTED_FROM" | "MERCHANT_PAYMENT";
 }
 
+interface GraphApiNode{
+  id: string;
+  label: string;
+  type: "ACCOUNT" | "DEVICE" | "IP" | "MERCHANT";
+}
+
+interface GraphApiEdge{
+  source:string;
+  target:string;
+  relationship:string;
+
+}
+
+interface GraphApiResponse{
+  nodes: GraphApiNode[];
+  edges: GraphApiEdge[];
+}
+
 interface FraudCase {
   id: string;
   title: string;
@@ -129,27 +147,7 @@ const mockCases: FraudCase[] = [
   }
 ];
 
-// Large network dataset for the Graph Explorer tab
-const explorerNodes: GraphNode[] = [
-  { id: "N1", label: "Acc: Ravi Kumar", type: "ACCOUNT", riskScore: 12, degreeCentrality: 0.22, shortestPathToFraud: 3, explanation: "Regular user with normal account parameters.", details: { "Acc Num": "X-3312-88", "KYC Tier": "Tier 3", "Risk Class": "Low" }, x: 100, y: 100 },
-  { id: "N2", label: "Acc: Priya Sharma", type: "ACCOUNT", riskScore: 94, degreeCentrality: 0.82, shortestPathToFraud: 1, explanation: "High risk account flagged in community detection.", details: { "Acc Num": "X-8801-44", "KYC Tier": "Tier 1", "Risk Class": "Critical" }, x: 250, y: 150 },
-  { id: "N3", label: "Device: PC-9912", type: "DEVICE", riskScore: 92, degreeCentrality: 0.88, shortestPathToFraud: 0, explanation: "Shared computer showing concurrent logins.", details: { "IMEI": "None (Web Client)", "OS": "Windows 11", "Browser": "Chrome headless" }, x: 250, y: 300 },
-  { id: "N4", label: "IP: 185.220.101.4", type: "IP", riskScore: 89, degreeCentrality: 0.90, shortestPathToFraud: 1, explanation: "TOR Exit Node IP address registering anonymous telemetry.", details: { "ISP": "Tactical VPN", "Location": "Amsterdam, NL" }, x: 450, y: 220 },
-  { id: "N5", label: "Acc: Vikram Patel", type: "ACCOUNT", riskScore: 85, degreeCentrality: 0.72, shortestPathToFraud: 2, explanation: "Account associated with money shuffling behaviour.", details: { "Acc Num": "X-9011-22", "KYC Tier": "Tier 2", "Risk Class": "High" }, x: 450, y: 80 },
-  { id: "N6", label: "Acc: Anjali Gupta", type: "ACCOUNT", riskScore: 18, degreeCentrality: 0.30, shortestPathToFraud: 2, explanation: "Normal transactional behavior with device overlap.", details: { "Acc Num": "X-4451-99", "KYC Tier": "Tier 3", "Risk Class": "Low" }, x: 600, y: 300 },
-  { id: "N7", label: "Merchant: CrypPay", type: "MERCHANT", riskScore: 96, degreeCentrality: 0.65, shortestPathToFraud: 1, explanation: "Unregulated virtual asset processor receiving high flows.", details: { "Merchant ID": "CRYP-T-882", "Country": "Panama" }, x: 650, y: 130 }
-];
 
-const explorerEdges: GraphEdge[] = [
-  { id: "E1", source: "N2", target: "N3", type: "USED_DEVICE" },
-  { id: "E2", source: "N5", target: "N3", type: "USED_DEVICE" },
-  { id: "E3", source: "N2", target: "N4", type: "CONNECTED_FROM" },
-  { id: "E4", source: "N5", target: "N4", type: "CONNECTED_FROM" },
-  { id: "E5", source: "N1", target: "N2", type: "TRANSFERRED_TO" },
-  { id: "E6", source: "N6", target: "N3", type: "USED_DEVICE" },
-  { id: "E7", source: "N2", target: "N7", type: "MERCHANT_PAYMENT" },
-  { id: "E8", source: "N5", target: "N7", type: "MERCHANT_PAYMENT" }
-];
 
 // ==========================================
 // --- Main Entry Page Component ---
@@ -218,12 +216,19 @@ const [transactionsError, setTransactionsError] = useState("");
   ]);
 
   // Selected items inside views
-  const [selectedCaseId, setSelectedCaseId] = useState("CASE-104");
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
-  
-  // Filtering states for Graph Explorer
-  const [explorerFilterType, setExplorerFilterType] = useState<string>("ALL");
-  const [explorerRiskThreshold, setExplorerRiskThreshold] = useState<number>(0);
+// Selected items inside views
+const [selectedCaseId, setSelectedCaseId] = useState("CASE-104");
+const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+
+// Real Graph Explorer data
+const [explorerNodes, setExplorerNodes] = useState<GraphNode[]>([]);
+const [explorerEdges, setExplorerEdges] = useState<GraphEdge[]>([]);
+const [graphLoading, setGraphLoading] = useState(false);
+const [graphError, setGraphError] = useState("");
+
+// Filtering states for Graph Explorer
+const [explorerFilterType, setExplorerFilterType] = useState<string>("ALL");
+const [explorerRiskThreshold, setExplorerRiskThreshold] = useState<number>(0);
 
   const selectedCase = mockCases.find((c) => c.id === selectedCaseId) || mockCases[0];
   const terminalEndRef = useRef<HTMLDivElement>(null);
@@ -315,6 +320,86 @@ useEffect(() => {
   };
 
   fetchTransactions();
+}, [accessToken]);
+
+// Fetch real graph data from backend
+useEffect(() => {
+  const fetchGraph = async () => {
+    if (!accessToken) return;
+
+    try {
+      setGraphLoading(true);
+      setGraphError("");
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/v1/graph",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const data: GraphApiResponse = await response.json();
+
+      if (!response.ok) {
+        setGraphError(
+          (data as any).detail || "Failed to load graph data."
+        );
+        return;
+      }
+
+      const nodes: GraphNode[] = data.nodes.map((node, index) => {
+        const columns = 3;
+        const column = index % columns;
+        const row = Math.floor(index / columns);
+
+        return {
+          id: node.id,
+          label: node.label,
+          type: node.type,
+
+          // These are placeholders until the backend
+          // exposes actual graph-risk analytics.
+          riskScore: 0,
+          degreeCentrality: 0,
+          shortestPathToFraud: 0,
+
+          explanation: "Live entity loaded from Panopticon graph API.",
+
+          details: {
+            "Source": "Panopticon API",
+            "Node Type": node.type,
+          },
+
+          x: 140 + column * 250,
+          y: 100 + row * 120,
+        };
+      });
+
+      const edges: GraphEdge[] = data.edges.map((edge, index) => ({
+        id: `API-EDGE-${index + 1}`,
+        source: edge.source,
+        target: edge.target,
+        type: edge.relationship as GraphEdge["type"],
+      }));
+
+      setExplorerNodes(nodes);
+      setExplorerEdges(edges);
+
+    } catch (error) {
+      console.error("Graph fetch error:", error);
+
+      setGraphError(
+        "Unable to connect to graph service."
+      );
+    } finally {
+      setGraphLoading(false);
+    }
+  };
+
+  fetchGraph();
 }, [accessToken]);
 
   // Live transaction simulation inside dashboard
@@ -444,6 +529,7 @@ useEffect(() => {
     );
 
     const data = await response.json();
+    console.log("LOGIN API RESPONSE:",data);
 
     if (!response.ok) {
       setAuthError(
@@ -1132,18 +1218,39 @@ setCurrentView("handshake");
                     </div>
 
                     <div className="flex items-center gap-4">
-                      <span className="text-[#A1A1AA] uppercase font-bold">Min Risk Index:</span>
-                      <input
-                        type="range"
-                        min="0"
-                        max="90"
-                        value={explorerRiskThreshold}
-                        onChange={(e) => setExplorerRiskThreshold(Number(e.target.value))}
-                        className="w-32 accent-white bg-white/10 rounded appearance-none cursor-pointer h-1"
-                      />
-                      <span className="text-white font-bold">{explorerRiskThreshold}%</span>
-                    </div>
+  <span className="text-[#A1A1AA] uppercase font-bold">
+    LIVE ENTITIES:
+  </span>
+
+  <span className="text-white font-bold">
+    {explorerNodes.length}
+  </span>
+
+  <span className="text-[#A1A1AA]">
+    NODES
+  </span>
+
+  <span className="text-white font-bold">
+    {explorerEdges.length}
+  </span>
+
+  <span className="text-[#A1A1AA]">
+    LINKS
+  </span>
+</div>
                   </section>
+
+                  {graphLoading && (
+  <div className="glass-card p-4 text-xs font-mono text-[#A1A1AA]">
+    LOADING LIVE GRAPH...
+  </div>
+)}
+
+{graphError && (
+  <div className="glass-card p-4 text-xs font-mono text-red-400">
+    GRAPH ERROR: {graphError}
+  </div>
+)}
 
                   {/* Main Grid splitting Graph Canvas and Node details */}
                   <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -1168,7 +1275,7 @@ setCurrentView("handshake");
                             
                             // Apply filters
                             const matchesType = explorerFilterType === "ALL" || sourceNode.type === explorerFilterType || targetNode.type === explorerFilterType;
-                            const matchesRisk = sourceNode.riskScore >= explorerRiskThreshold && targetNode.riskScore >= explorerRiskThreshold;
+                            const matchesRisk = true;
                             return matchesType && matchesRisk;
                           })
                           .map((edge) => {
@@ -1206,7 +1313,7 @@ setCurrentView("handshake");
                         {explorerNodes
                           .filter((node) => {
                             const matchesType = explorerFilterType === "ALL" || node.type === explorerFilterType;
-                            const matchesRisk = node.riskScore >= explorerRiskThreshold;
+                            const matchesRisk = true;
                             return matchesType && matchesRisk;
                           })
                           .map((node) => {
@@ -1279,7 +1386,7 @@ setCurrentView("handshake");
                             <div>
                               <div className="flex justify-between font-mono text-xs text-[#A1A1AA] mb-1">
                                 <span>GNN RISK ASSESSMENT</span>
-                                <span className="text-white font-bold">{selectedNode.riskScore}%</span>
+                                <span className="text-white font-bold">LIVE DATA  </span>
                               </div>
                               <div className="w-full bg-[#18181b] h-2 rounded-full overflow-hidden border border-white/5">
                                 <div
@@ -1292,11 +1399,25 @@ setCurrentView("handshake");
                             {/* Metrics */}
                             <div className="grid grid-cols-2 gap-4 border-t border-b border-white/10 py-4 font-mono text-xs">
                               <div>
-                                <span className="text-[#A1A1AA] block text-[9px]">DEGREE CENTRALITY</span>
+                                <div>
+  <span className="text-[#A1A1AA] block text-[9px]">
+    NODE TYPE
+  </span>
+  <span className="text-white font-bold">
+    {selectedNode.type}
+  </span>
+</div>
                                 <span className="text-white font-bold">{selectedNode.degreeCentrality.toFixed(2)}</span>
                               </div>
                               <div>
-                                <span className="text-[#A1A1AA] block text-[9px]">PATH TO FRAUD</span>
+                                <div>
+  <span className="text-[#A1A1AA] block text-[9px]">
+    DATA SOURCE
+  </span>
+  <span className="text-white font-bold">
+    GRAPH API
+  </span>
+</div>
                                 <span className="text-white font-bold">{selectedNode.shortestPathToFraud} hops</span>
                               </div>
                             </div>
