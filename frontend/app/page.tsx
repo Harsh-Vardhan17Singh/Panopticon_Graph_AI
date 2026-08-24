@@ -44,6 +44,8 @@ interface GraphEdge {
   source: string;
   target: string;
   type: "TRANSFERRED_TO" | "USED_DEVICE" | "CONNECTED_FROM" | "MERCHANT_PAYMENT";
+  transaction_count: number;
+  total_amount: number;
 }
 
 interface GraphApiNode{
@@ -52,11 +54,12 @@ interface GraphApiNode{
   type: "ACCOUNT" | "DEVICE" | "IP" | "MERCHANT";
 }
 
-interface GraphApiEdge{
-  source:string;
-  target:string;
-  relationship:string;
-
+interface GraphApiEdge {
+  source: string;
+  target: string;
+  relationship: string;
+  transaction_count: number;
+  total_amount: number;
 }
 
 interface GraphApiResponse{
@@ -231,6 +234,33 @@ const [explorerFilterType, setExplorerFilterType] = useState<string>("ALL");
 const [explorerRiskThreshold, setExplorerRiskThreshold] = useState<number>(0);
 
   const selectedCase = mockCases.find((c) => c.id === selectedCaseId) || mockCases[0];
+
+  const selectedNodeEdges = selectedNode
+  ? explorerEdges.filter(
+      (edge) =>
+        edge.source === selectedNode.id ||
+        edge.target === selectedNode.id
+    )
+  : [];
+
+const selectedNodeConnections = selectedNode
+  ? selectedNodeEdges.map((edge) => {
+      const connectedNodeId =
+        edge.source === selectedNode.id
+          ? edge.target
+          : edge.source;
+
+      const connectedNode = explorerNodes.find(
+        (node) => node.id === connectedNodeId
+      );
+
+      return {
+        edge,
+        connectedNode,
+      };
+    })
+  : [];
+
   const terminalEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll logs
@@ -378,11 +408,15 @@ useEffect(() => {
         };
       });
 
+      console.log("Graph Edges:",data.edges);
+
       const edges: GraphEdge[] = data.edges.map((edge, index) => ({
         id: `API-EDGE-${index + 1}`,
         source: edge.source,
         target: edge.target,
         type: edge.relationship as GraphEdge["type"],
+        transaction_count: edge.transaction_count,
+        total_amount: edge.total_amount,
       }));
 
       setExplorerNodes(nodes);
