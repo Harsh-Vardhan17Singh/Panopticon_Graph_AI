@@ -1435,31 +1435,30 @@ setCurrentView("handshake");
   </div>
 </div>
 
-                            {/* Metrics */}
-                            <div className="grid grid-cols-2 gap-4 border-t border-b border-white/10 py-4 font-mono text-xs">
-                              <div>
-                                <div>
-  <span className="text-[#A1A1AA] block text-[9px]">
-    NODE TYPE
-  </span>
-  <span className="text-white font-bold">
-    {selectedNode.type}
-  </span>
+                            {/* Live Graph Metrics */}
+<div className="grid grid-cols-2 gap-4 border-t border-b border-white/10 py-4 font-mono text-xs">
+
+  <div>
+    <span className="text-[#A1A1AA] block text-[9px]">
+      NODE TYPE
+    </span>
+
+    <span className="text-white font-bold">
+      {selectedNode.type}
+    </span>
+  </div>
+
+  <div>
+    <span className="text-[#A1A1AA] block text-[9px]">
+      CONNECTED ENTITIES
+    </span>
+
+    <span className="text-white font-bold">
+      {selectedNodeConnections.length}
+    </span>
+  </div>
+
 </div>
-                                <span className="text-white font-bold">{selectedNode.degreeCentrality.toFixed(2)}</span>
-                              </div>
-                              <div>
-                                <div>
-  <span className="text-[#A1A1AA] block text-[9px]">
-    DATA SOURCE
-  </span>
-  <span className="text-white font-bold">
-    GRAPH API
-  </span>
-</div>
-                                <span className="text-white font-bold">{selectedNode.shortestPathToFraud} hops</span>
-                              </div>
-                            </div>
 
                             {/* Attributes */}
                             <div>
