@@ -1416,19 +1416,24 @@ setCurrentView("handshake");
                               <p className="text-xs font-mono text-[#A1A1AA] mt-1">NODE_ID: {selectedNode.id}</p>
                             </div>
 
-                            {/* Risk score */}
-                            <div>
-                              <div className="flex justify-between font-mono text-xs text-[#A1A1AA] mb-1">
-                                <span>GNN RISK ASSESSMENT</span>
-                                <span className="text-white font-bold">LIVE DATA  </span>
-                              </div>
-                              <div className="w-full bg-[#18181b] h-2 rounded-full overflow-hidden border border-white/5">
-                                <div
-                                  className={`h-full ${selectedNode.riskScore > 80 ? "bg-white" : "bg-white/50"}`}
-                                  style={{ width: `${selectedNode.riskScore}%` }}
-                                ></div>
-                              </div>
-                            </div>
+                            {/* Live Graph Activity */}
+<div>
+  <div className="flex justify-between font-mono text-xs text-[#A1A1AA] mb-2">
+    <span>GRAPH ACTIVITY</span>
+    <span className="text-white font-bold">
+      {selectedNodeEdges.length} LINKS
+    </span>
+  </div>
+
+  <div className="w-full bg-[#18181b] h-2 rounded-full overflow-hidden border border-white/5">
+    <div
+      className="h-full bg-white"
+      style={{
+        width: `${Math.min(selectedNodeEdges.length * 25, 100)}%`,
+      }}
+    ></div>
+  </div>
+</div>
 
                             {/* Metrics */}
                             <div className="grid grid-cols-2 gap-4 border-t border-b border-white/10 py-4 font-mono text-xs">
