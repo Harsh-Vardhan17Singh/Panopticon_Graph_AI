@@ -44,8 +44,8 @@ interface GraphEdge {
   source: string;
   target: string;
   type: "TRANSFERRED_TO" | "USED_DEVICE" | "CONNECTED_FROM" | "MERCHANT_PAYMENT";
-  transaction_count: number;
-  total_amount: number;
+  transaction_count?: number;
+  total_amount?: number;
 }
 
 interface GraphApiNode{
@@ -390,8 +390,8 @@ useEffect(() => {
           label: node.label,
           type: node.type,
 
-          // These are placeholders until the backend
-          // exposes actual graph-risk analytics.
+          // Legacy field required by the shared GraphNode type.
+          // Live Graph Explorer does not display these values.
           riskScore: 0,
           degreeCentrality: 0,
           shortestPathToFraud: 0,
@@ -1360,10 +1360,7 @@ setCurrentView("handshake");
                                 className="cursor-pointer"
                                 onClick={() => setSelectedNode(node)}
                               >
-                                {/* Glowing halo for selected or high risk */}
-                                {node.riskScore > 80 && (
-                                  <circle r="18" fill="none" stroke="#ffffff" strokeWidth="1" className="animate-pulse opacity-40" />
-                                )}
+                               
 
                                 {/* Node shape */}
                                 {node.type === "ACCOUNT" && (
@@ -1541,7 +1538,7 @@ setCurrentView("handshake");
             <div className="text-right">
 
               <div className="text-xs text-white font-mono font-bold">
-                {edge.transaction_count}
+                {edge.transaction_count ?? 0}
               </div>
 
               <div className="text-[8px] text-[#A1A1AA] font-mono uppercase">
@@ -1559,7 +1556,7 @@ setCurrentView("handshake");
             </span>
 
             <span className="text-[10px] text-white font-mono font-bold">
-              ₹{edge.total_amount.toLocaleString("en-IN")}
+              ₹{(edge.total_amount ?? 0).toLocaleString("en-IN")}
             </span>
 
           </div>
