@@ -1460,26 +1460,119 @@ setCurrentView("handshake");
 
 </div>
 
-                            {/* Attributes */}
-                            <div>
-                              <span className="text-[10px] text-[#A1A1AA] font-mono uppercase block mb-2">Metadata Attributes</span>
-                              <div className="space-y-2 font-mono text-xs bg-black/30 p-3 rounded border border-white/5">
-                                {Object.entries(selectedNode.details).map(([key, value]) => (
-                                  <div key={key} className="flex justify-between">
-                                    <span className="text-[#A1A1AA]">{key}:</span>
-                                    <span className="text-white font-semibold">{value}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
+                            {/* Live Entity Metadata */}
+<div>
+  <span className="text-[10px] text-[#A1A1AA] font-mono uppercase block mb-2">
+    Entity Metadata
+  </span>
 
-                            {/* Explainability */}
-                            <div>
-                              <span className="text-[10px] text-[#A1A1AA] font-mono uppercase block mb-1">Lineage Explainability</span>
-                              <p className="text-xs text-[#A1A1AA] leading-relaxed font-geist">
-                                {selectedNode.explanation}
-                              </p>
-                            </div>
+  <div className="space-y-2 font-mono text-xs bg-black/30 p-3 rounded border border-white/5">
+
+    <div className="flex justify-between">
+      <span className="text-[#A1A1AA]">
+        Source:
+      </span>
+
+      <span className="text-white font-semibold">
+        Panopticon API
+      </span>
+    </div>
+
+    <div className="flex justify-between">
+      <span className="text-[#A1A1AA]">
+        Node ID:
+      </span>
+
+      <span className="text-white font-semibold">
+        {selectedNode.id}
+      </span>
+    </div>
+
+    <div className="flex justify-between">
+      <span className="text-[#A1A1AA]">
+        Type:
+      </span>
+
+      <span className="text-white font-semibold">
+        {selectedNode.type}
+      </span>
+    </div>
+
+  </div>
+</div>
+                           {/* Graph Relationships */}
+<div>
+
+  <span className="text-[10px] text-[#A1A1AA] font-mono uppercase block mb-2">
+    Graph Relationships
+  </span>
+
+  <div className="space-y-2">
+
+    {selectedNodeConnections.length === 0 ? (
+
+      <div className="text-xs text-[#A1A1AA] font-mono">
+        NO CONNECTED RELATIONSHIPS
+      </div>
+
+    ) : (
+
+      selectedNodeConnections.map(({ edge, connectedNode }) => (
+
+        <div
+          key={edge.id}
+          className="bg-black/30 p-3 rounded border border-white/5"
+        >
+
+          <div className="flex justify-between items-start gap-3">
+
+            <div>
+
+              <div className="text-[10px] text-white font-mono font-bold uppercase">
+                {edge.type.replaceAll("_", " ")}
+              </div>
+
+              <div className="text-[10px] text-[#A1A1AA] font-mono mt-1">
+                → {connectedNode?.label ?? "Unknown Entity"}
+              </div>
+
+            </div>
+
+            <div className="text-right">
+
+              <div className="text-xs text-white font-mono font-bold">
+                {edge.transaction_count}
+              </div>
+
+              <div className="text-[8px] text-[#A1A1AA] font-mono uppercase">
+                transactions
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="border-t border-white/5 mt-2 pt-2 flex justify-between">
+
+            <span className="text-[9px] text-[#A1A1AA] font-mono uppercase">
+              Relationship Volume
+            </span>
+
+            <span className="text-[10px] text-white font-mono font-bold">
+              ₹{edge.total_amount.toLocaleString("en-IN")}
+            </span>
+
+          </div>
+
+        </div>
+
+      ))
+
+    )}
+
+  </div>
+
+</div>
                           </div>
                         ) : (
                           <div className="flex-1 flex flex-col items-center justify-center text-center text-xs font-mono text-[#A1A1AA] py-20">
