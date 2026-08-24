@@ -8,14 +8,13 @@ from app.models.device import Device
 
 class GraphService:
     """
-    Converts financial transaction data into a graph
-    of accounts, merchants, and devices.
+    Converts transaction data into a graph of
+    accounts, merchants, and devices.
+
+    Duplicate relationships are merged together.
     """
 
-    def get_graph(
-        self,
-        db: Session,
-    ) -> dict:
+    def get_graph(self, db: Session) -> dict:
 
         transactions = (
             db.query(Transaction)
@@ -23,31 +22,29 @@ class GraphService:
         )
 
         nodes = {}
-        edges = []
+        edges = {}
 
         for transaction in transactions:
 
+            # -----------------------------
+            # GET RELATED RECORDS
+            # -----------------------------
+
             account = (
                 db.query(Account)
-                .filter(
-                    Account.id == transaction.account_id
-                )
+                .filter(Account.id == transaction.account_id)
                 .first()
             )
 
             merchant = (
                 db.query(Merchant)
-                .filter(
-                    Merchant.id == transaction.merchant_id
-                )
+                .filter(Merchant.id == transaction.merchant_id)
                 .first()
             )
 
             device = (
                 db.query(Device)
-                .filter(
-                    Device.id == transaction.device_id
-                )
+                .filter(Device.id == transaction.device_id)
                 .first()
             )
 
@@ -57,16 +54,11 @@ class GraphService:
 
             if account:
 
-                account_node_id = (
-                    f"account-{account.id}"
-                )
+                account_node_id = f"account-{account.id}"
 
                 nodes[account_node_id] = {
                     "id": account_node_id,
-                    "label": (
-                        f"Account: "
-                        f"{account.account_number}"
-                    ),
+                    "label": f"Account: {account.account_number}",
                     "type": "ACCOUNT",
                 }
 
@@ -76,16 +68,11 @@ class GraphService:
 
             if merchant:
 
-                merchant_node_id = (
-                    f"merchant-{merchant.id}"
-                )
+                merchant_node_id = f"merchant-{merchant.id}"
 
                 nodes[merchant_node_id] = {
                     "id": merchant_node_id,
-                    "label": (
-                        f"Merchant: "
-                        f"{merchant.merchant_name}"
-                    ),
+                    "label": f"Merchant: {merchant.merchant_name}",
                     "type": "MERCHANT",
                 }
 
@@ -95,16 +82,11 @@ class GraphService:
 
             if device:
 
-                device_node_id = (
-                    f"device-{device.id}"
-                )
+                device_node_id = f"device-{device.id}"
 
                 nodes[device_node_id] = {
                     "id": device_node_id,
-                    "label": (
-                        f"Device: "
-                        f"{device.device_id}"
-                    ),
+                    "label": f"Device: {device.device_id}",
                     "type": "DEVICE",
                 }
 
@@ -114,15 +96,30 @@ class GraphService:
 
             if account and merchant:
 
-                edges.append({
-                    "source": (
-                        f"account-{account.id}"
-                    ),
-                    "target": (
-                        f"merchant-{merchant.id}"
-                    ),
-                    "relationship": "MERCHANT_PAYMENT",
-                })
+                source = f"account-{account.id}"
+                target = f"merchant-{merchant.id}"
+
+                edge_key = (
+                    source,
+                    target,
+                    "MERCHANT_PAYMENT",
+                )
+
+                if edge_key not in edges:
+
+                    edges[edge_key] = {
+                        "source": source,
+                        "target": target,
+                        "relationship": "MERCHANT_PAYMENT",
+                        "transaction_count": 0,
+                        "total_amount": 0.0,
+                    }
+
+                edges[edge_key]["transaction_count"] += 1
+
+                edges[edge_key]["total_amount"] += float(
+                    transaction.amount
+                )
 
             # -----------------------------
             # ACCOUNT -> DEVICE
@@ -130,19 +127,34 @@ class GraphService:
 
             if account and device:
 
-                edges.append({
-                    "source": (
-                        f"account-{account.id}"
-                    ),
-                    "target": (
-                        f"device-{device.id}"
-                    ),
-                    "relationship": "USED_DEVICE",
-                })
+                source = f"account-{account.id}"
+                target = f"device-{device.id}"
+
+                edge_key = (
+                    source,
+                    target,
+                    "USED_DEVICE",
+                )
+
+                if edge_key not in edges:
+
+                    edges[edge_key] = {
+                        "source": source,
+                        "target": target,
+                        "relationship": "USED_DEVICE",
+                        "transaction_count": 0,
+                        "total_amount": 0.0,
+                    }
+
+                edges[edge_key]["transaction_count"] += 1
+
+                edges[edge_key]["total_amount"] += float(
+                    transaction.amount
+                )
 
         return {
             "nodes": list(nodes.values()),
-            "edges": edges,
+            "edges": list(edges.values()),
         }
 
 
