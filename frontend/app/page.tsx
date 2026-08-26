@@ -686,6 +686,9 @@ setCurrentView("handshake");
   const handleLogout = () => {
     setAccessToken("");
     setCurrentUser(null);
+    setSelectedNode(null);
+    setSelectedNodeDetails(null);
+    
     localStorage.removeItem("accesss_token");
 
     setCurrentView("landing");
@@ -1062,6 +1065,7 @@ setCurrentView("handshake");
                 onClick={() => {
                   setActivePortalTab("cases");
                   setSelectedNode(null);
+                  setSelectedNodeDetails(null);
                 }}
                 className={`w-full text-left px-4 py-2.5 rounded font-sans transition-all text-xs uppercase tracking-wider font-semibold shrink-0 md:shrink-1 ${
                   activePortalTab === "cases" ? "bg-white text-black" : "text-[#A1A1AA] hover:text-white hover:bg-white/5"
@@ -1654,6 +1658,24 @@ setCurrentView("handshake");
     </div>
 
   </div>
+
+                              {/* Backend Explainability */}
+                            {selectedNodeDetails && (
+                              <div>
+                                <span className="text-[10px] text-[#A1A1AA] font-mono uppercase block mb-2">
+                                  Lineage Explainability
+                                </span>
+
+                                <div className="bg-black/30 p-3 rounded border border-white/5">
+                                  <p className="text-xs text-[#A1A1AA] leading-relaxed font-geist">
+                                    {selectedNodeDetails.explanation}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+
+
 </div>
                            {/* Graph Relationships */}
 <div>
