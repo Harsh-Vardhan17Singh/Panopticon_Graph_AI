@@ -456,6 +456,59 @@ useEffect(() => {
   fetchGraph();
 }, [accessToken]);
 
+// Fetch real analytics for the selected graph node
+useEffect(() => {
+  if (!accessToken || !selectedNode) {
+    setSelectedNodeDetails(null);
+    setNodeDetailsError("");
+    return;
+  }
+
+  const fetchNodeDetails = async () => {
+    try {
+      setNodeDetailsLoading(true);
+      setNodeDetailsError("");
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/v1/graph/${encodeURIComponent(
+          selectedNode.id
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setNodeDetailsError(
+          data.detail || "Failed to load node analytics."
+        );
+        setSelectedNodeDetails(null);
+        return;
+      }
+
+      setSelectedNodeDetails(data);
+    } catch (error) {
+      console.error("Node details fetch error:", error);
+
+      setNodeDetailsError(
+        "Unable to connect to node analytics service."
+      );
+
+      setSelectedNodeDetails(null);
+    } finally {
+      setNodeDetailsLoading(false);
+    }
+  };
+
+  fetchNodeDetails();
+}, [accessToken, selectedNode]);
+
+
   // Live transaction simulation inside dashboard
   useEffect(() => {
     if (currentView !== "portal" || activePortalTab !== "dashboard") return;
@@ -1471,11 +1524,96 @@ setCurrentView("handshake");
     </span>
 
     <span className="text-white font-bold">
-      {selectedNodeConnections.length}
+      {selectedNodeDetails?.connected_entities ?? selectedNodeConnections.length}
     </span>
   </div>
 
 </div>
+
+                            {/* Real Risk Analytics */}
+                            {nodeDetailsLoading ? (
+                              <div className="text-xs font-mono text-[#A1A1AA] py-2">
+                                LOADING NEURAL AUDIT DATA...
+                              </div>
+                            ) : nodeDetailsError ? (
+                              <div className="text-xs font-mono text-red-400 py-2">
+                                {nodeDetailsError}
+                              </div>
+                            ) : selectedNodeDetails ? (
+                              <div className="border-b border-white/10 pb-4">
+                                <span className="text-[10px] text-[#A1A1AA] font-mono uppercase block mb-3">
+                                  Risk Analytics
+                                </span>
+
+                                <div className="grid grid-cols-2 gap-3 font-mono text-xs">
+
+                                  <div className="bg-black/30 p-3 rounded border border-white/5">
+                                    <span className="text-[9px] text-[#A1A1AA] block uppercase">
+                                      Transactions
+                                    </span>
+                                    <span className="text-white font-bold">
+                                      {selectedNodeDetails.transaction_count}
+                                    </span>
+                                  </div>
+
+                                  <div className="bg-black/30 p-3 rounded border border-white/5">
+                                    <span className="text-[9px] text-[#A1A1AA] block uppercase">
+                                      Total Volume
+                                    </span>
+                                    <span className="text-white font-bold">
+                                      ₹{selectedNodeDetails.total_amount.toLocaleString("en-IN")}
+                                    </span>
+                                  </div>
+
+                                  <div className="bg-black/30 p-3 rounded border border-white/5">
+                                    <span className="text-[9px] text-[#A1A1AA] block uppercase">
+                                      Suspicious
+                                    </span>
+                                    <span className="text-white font-bold">
+                                      {selectedNodeDetails.suspicious_count}
+                                    </span>
+                                  </div>
+
+                                  <div className="bg-black/30 p-3 rounded border border-white/5">
+                                    <span className="text-[9px] text-[#A1A1AA] block uppercase">
+                                      Suspicious Volume
+                                    </span>
+                                    <span className="text-white font-bold">
+                                      ₹{selectedNodeDetails.suspicious_count.toLocaleString("en-IN")}
+                                    </span>
+                                  </div>
+
+                                  <div className="bg-black/30 p-3 rounded border border-white/5">
+                                    <span className="text-[9px] text-[#A1A1AA] block uppercase">
+                                      Avg Risk Score
+                                    </span>
+                                    <span className="text-white font-bold">
+                                      {selectedNodeDetails.average_risk_score}
+                                    </span>
+                                  </div>
+
+                                  <div className="bg-black/30 p-3 rounded border border-white/5">
+                                    <span className="text-[9px] text-[#A1A1AA] block uppercase">
+                                      Highest Risk
+                                    </span>
+                                    <span className="text-white font-bold">
+                                      {selectedNodeDetails.highest_risk_score}
+                                    </span>
+                                  </div>
+
+                                </div>
+
+                                <div className="mt-3 flex justify-between items-center bg-black/30 p-3 rounded border border-white/5">
+                                  <span className="text-[9px] text-[#A1A1AA] font-mono uppercase">
+                                    Risk Level
+                                  </span>
+
+                                  <span className="text-white font-bold font-mono text-xs">
+                                    {selectedNodeDetails.risk_level}
+                                  </span>
+                                </div>
+                              </div>
+                            ) : null}
 
                             {/* Live Entity Metadata */}
 <div>
