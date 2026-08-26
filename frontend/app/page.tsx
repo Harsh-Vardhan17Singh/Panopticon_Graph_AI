@@ -67,6 +67,21 @@ interface GraphApiResponse{
   edges: GraphApiEdge[];
 }
 
+interface GraphNodeDetails {
+  node_id:string;
+  label:string;
+  type:"ACCOUNT" | "DEVICE" | "IP" | "MERCHANT";
+  transaction_count:number;
+  total_amount:number;
+  suspicious_count:number;
+  suspicious_percentage:number;
+  average_risk_score:number;
+  highest_risk_score:number;
+  risk_level:string;
+  connected_entities:number;
+  explanation:string;
+}
+
 interface FraudCase {
   id: string;
   title: string;
@@ -222,6 +237,11 @@ const [transactionsError, setTransactionsError] = useState("");
 // Selected items inside views
 const [selectedCaseId, setSelectedCaseId] = useState("CASE-104");
 const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+const [selectedNodeDetails, setSelectedNodeDetails] = useState<GraphNodeDetails | null>(null);
+
+const [nodeDetailsLoading, setNodeDetailsLoading] = useState(false);
+
+const [nodeDetailsError, setNodeDetailsError] = useState("");
 
 // Real Graph Explorer data
 const [explorerNodes, setExplorerNodes] = useState<GraphNode[]>([]);
