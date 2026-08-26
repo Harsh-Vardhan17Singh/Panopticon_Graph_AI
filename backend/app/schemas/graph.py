@@ -19,10 +19,10 @@ class GraphResponse(BaseModel):
 class GraphNodeDetails(BaseModel):
     node_id:str
     label:str
-    typr:str
+    type:str
 
     transaction_count:int
-    total_amouont:float
+    total_amount:float
 
     suspicious_count:int
     suspicious_amount:float
