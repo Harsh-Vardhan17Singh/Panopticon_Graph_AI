@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.transaction import Transaction
+from app.schemas.transaction import TransactionCreate
 
 
 class RiskService:
@@ -14,7 +15,7 @@ class RiskService:
     def calculate_risk(
         self,
         db: Session,
-        transaction: Transaction,
+        transaction: TransactionCreate,
     ) -> dict:
         """
         Calculate a risk score between 0 and 100.

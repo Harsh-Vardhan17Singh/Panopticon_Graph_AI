@@ -30,12 +30,12 @@ class TransactionCreate(BaseModel):
     )
 
     merchant_id: int = Field(
-        ...,
+        deafult=None,
         description="Merchant ID",
     )
 
     device_id: int = Field(
-        ...,
+        default=None,
         description="Device ID",
     )
 
