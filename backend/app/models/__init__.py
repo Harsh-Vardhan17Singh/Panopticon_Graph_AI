@@ -4,3 +4,5 @@ from app.models.account import Account
 from app.models.merchant import Merchant
 from app.models.device import Device
 from app.models.transaction import Transaction
+from app.models.alert import Alert
+from app.models.fraud_case import FraudCase
