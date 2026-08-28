@@ -17,8 +17,8 @@ class TransactionService:
     ) -> Transaction:
 
         risk_result = risk_service.calculate_risk(
-    db=db,
-    transaction=transaction,
+    amount=transaction.amount,
+    transaction_type=transaction.transaction_type,
 )
 
         db_transaction = Transaction(
