@@ -13,6 +13,7 @@ class AlertService:
     ) -> Alert:
 
         alert = Alert(
+            transaction_id=transaction_id,
             title=title,
             risk_score=risk_score,
             priority=priority,
@@ -29,7 +30,7 @@ class AlertService:
             self,
             db:Session,
 
-    )-> list[ALert]:
+    )-> list[Alert]:
 
         return (
             db.query(Alert)
@@ -37,4 +38,4 @@ class AlertService:
             .all()
         )
 
-    alert_service = AlertService()
+alert_service = AlertService()

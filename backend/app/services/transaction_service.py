@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.transaction import Transaction
 from app.schemas.transaction import TransactionCreate
 from app.services.risk_service import risk_service
-
+from app.services.alert_service import alert_service
 
 class TransactionService:
     """
@@ -38,6 +38,17 @@ class TransactionService:
         db.add(db_transaction)
         db.commit()
         db.refresh(db_transaction)
+
+        #Create an Alert for high-risk transaction
+
+        if risk_result["is_suspicious"]:
+            alert_service.create_alert(
+                db=db,
+                title=f"Suspicious transaction detected: {transaction.transaction_id}",
+                risk_score=risk_result["risk_score"],
+                priority=risk_result["risk_level"],
+            )
+            
 
         return db_transaction
 

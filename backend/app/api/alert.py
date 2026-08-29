@@ -14,13 +14,13 @@ router = APIRouter(
 
 @router.get(
     "",
-    reponse_model=list[AlertResponse],
+    response_model=list[AlertResponse],
     status_code=status.HTTP_200_OK,
 )
 def get_alerts(
     db:Session = Depends(get_db),
     current_user:User = Depends(
-        reuire_role("admin","analyst")
+        require_role("admin","analyst")
     ),
 ):
     return alert_service.get_alerts(db=db)
