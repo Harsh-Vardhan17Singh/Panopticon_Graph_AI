@@ -44,11 +44,11 @@ class TransactionService:
         if risk_result["is_suspicious"]:
             alert_service.create_alert(
                 db=db,
-                title=f"Suspicious transaction detected: {transaction.transaction_id}",
+                transaction_id=transaction.transaction_id,
+                title=f"Suspicious transaction detected: { transaction.transaction_id}",
                 risk_score=risk_result["risk_score"],
-                priority=risk_result["risk_level"],
-            )
-            
+                priority=risk_result["risk_level"]
+            )  
 
         return db_transaction
 

@@ -1,33 +1,42 @@
-from sqlalchemy import Column, Integer, String , Float 
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from datetime import datetime
+
 from app.db.base import Base
+
 
 class Alert(Base):
     __tablename__ = "alerts"
 
-    id = Column(Integer,
-                 primary_key=True,
-                index=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
     transaction_id = Column(
         String,
-        ForeignKey("transaction.transaction_id"),
+        ForeignKey("transactions.transaction_id"),
         nullable=False,
     )
 
+    title = Column(
+        String,
+        nullable=False,
+    )
 
-    title = Column(String,
-                   nullable=False,)
+    risk_score = Column(
+        Float,
+        nullable=False,
+    )
 
-    risk_score = Column(Float,
-                        nullable=False,)
-
-
-    priority = Column(String,
-                      nullable=False)
+    priority = Column(
+        String,
+        nullable=False,
+    )
 
     status = Column(
         String,
-        default ="NEW",
+        default="NEW",
         nullable=False,
     )
 
@@ -36,5 +45,3 @@ class Alert(Base):
         default=datetime.utcnow,
         nullable=False,
     )
-
-    
