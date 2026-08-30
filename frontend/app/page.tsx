@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 // ==========================================
 // --- Mock Data & Type Definitions ---
 // ==========================================
@@ -319,7 +321,7 @@ const selectedNodeConnections = selectedNode
   const fetchDashboardSummary = async () => {
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/dashboard/summary",
+        `${API_URL}/api/v1/dashboard/summary`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -357,7 +359,7 @@ useEffect(() => {
       setTransactionsError("");
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/transactions?limit=10",
+        `${API_URL}/api/v1/transactions?limit=10`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -394,7 +396,7 @@ useEffect(() => {
       setAlertsError("");
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/alerts",
+        `{API_URL}/api/v1/alerts`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -435,7 +437,7 @@ useEffect(() => {
       setGraphError("");
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/graph",
+        `${API_URL}/api/v1/graph`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -523,7 +525,7 @@ useEffect(() => {
       setNodeDetailsError("");
 
       const response = await fetch(
-        `http://127.0.0.1:8000/api/v1/graph/${encodeURIComponent(
+        `${API_URL}/api/v1/graph/${encodeURIComponent(
           selectedNode.id
         )}`,
         {
@@ -675,7 +677,7 @@ useEffect(() => {
 
   try {
     const response = await fetch(
-      "http://127.0.0.1:8000/api/v1/auth/login",
+      `${API_URL}/api/v1/auth/login`,
       {
         method: "POST",
         headers: {
@@ -702,7 +704,7 @@ useEffect(() => {
 localStorage.setItem("access_token", data.access_token);
 
 const profileResponse = await fetch(
-  "http://127.0.0.1:8000/api/v1/auth/me",
+  `${API_URL}/api/v1/auth/me`,
   {
     headers: {
       Authorization: `Bearer ${data.access_token}`,
