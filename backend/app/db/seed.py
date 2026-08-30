@@ -142,7 +142,11 @@ def seed_database():
             db.add(admin)
             print("Admin user created.")
         else:
+            admin.password = hash_password("Admin@123")
+            admin.role = "admin"
+            admin.organization_id = organization.id
             print("Admin user already exists.")
+            
         db.commit()
 
         print("\nDevelopment database setup completed.")
