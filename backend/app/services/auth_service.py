@@ -59,33 +59,35 @@ class AuthService:
 
         return new_user
 
-    def login_user(
-            self,
-            db : Session,
-            login_data:UserLogin,
+def login_user(
+    self,
+    db: Session,
+    login_data: UserLogin,
+) -> str:
+    """
+    Authenticate a user and return a JWT Access Token.
+    """
 
-        ) -> str:
-        """
-        Authenticate a user and return a JWT Access Token.
- 
-        """
+    user = (
+        db.query(User)
+        .filter(User.email == login_data.email)
+        .first()
+    )
 
-        user = (
-            db.query(User)
-            .filter(User.email == login_data.email)
-            .first()
-        )
+    if user is None or not verify_password(
+        login_data.password,
+        user.password
+    ):
+        raise ValueError("Invalid email or password")
 
-        if user is None:
-            raise ValueError("Invalid emial or password")
-        access_token = create_access_token(
-            data={
-                "sub":str(user.id),
-                "email":user.email,
-                "role":user.role,
+    access_token = create_access_token(
+        data={
+            "sub": str(user.id),
+            "email": user.email,
+            "role": user.role,
+        }
+    )
 
-            }
-        )
+    return access_token
 
-        return access_token
 auth_service = AuthService()
