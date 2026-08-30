@@ -5,22 +5,25 @@ from app.core.security import (
     hash_password,
     verify_password,
 )
+
 from app.models.organization import Organization
 from app.models.user import User
+
 from app.schemas.user import (
     UserLogin,
     UserRegister,
 )
 
+
 class AuthService:
     """
-    Contains Business logic for user registration and login.
+    Contains business logic for user registration and login.
     """
 
     def register_user(
-            self,
-            db:Session,
-            user_data:UserRegister,
+        self,
+        db: Session,
+        user_data: UserRegister,
     ) -> User:
         """
         Register a new user.
@@ -35,12 +38,16 @@ class AuthService:
         if existing_user:
             raise ValueError("Email already registered")
 
-        organization = db.query(Organization).first()
+        organization = (
+            db.query(Organization)
+            .first()
+        )
 
         if organization is None:
             raise ValueError(
                 "No organization found. Seed the database first."
             )
+
         hashed_password = hash_password(
             user_data.password
         )
@@ -59,35 +66,40 @@ class AuthService:
 
         return new_user
 
-def login_user(
-    self,
-    db: Session,
-    login_data: UserLogin,
-) -> str:
-    """
-    Authenticate a user and return a JWT Access Token.
-    """
+    def login_user(
+        self,
+        db: Session,
+        login_data: UserLogin,
+    ) -> str:
+        """
+        Authenticate a user and return a JWT access token.
+        """
 
-    user = (
-        db.query(User)
-        .filter(User.email == login_data.email)
-        .first()
-    )
+        user = (
+            db.query(User)
+            .filter(User.email == login_data.email)
+            .first()
+        )
 
-    if user is None or not verify_password(
-        login_data.password,
-        user.password
-    ):
-        raise ValueError("Invalid email or password")
+        if user is None:
+            raise ValueError("Invalid email or password")
 
-    access_token = create_access_token(
-        data={
-            "sub": str(user.id),
-            "email": user.email,
-            "role": user.role,
-        }
-    )
+        # IMPORTANT: verify the actual password
+        if not verify_password(
+            login_data.password,
+            user.password,
+        ):
+            raise ValueError("Invalid email or password")
 
-    return access_token
+        access_token = create_access_token(
+            data={
+                "sub": str(user.id),
+                "email": user.email,
+                "role": user.role,
+            }
+        )
+
+        return access_token
+
 
 auth_service = AuthService()
