@@ -4,7 +4,9 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 
-SECRET_KEY = "your-secret-key-change-this-in-production"
+import os
+
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-secret-key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
