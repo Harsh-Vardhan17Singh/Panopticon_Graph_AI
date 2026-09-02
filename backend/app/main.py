@@ -15,7 +15,7 @@ app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION,
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 
@@ -24,8 +24,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "https://panopticon-graphai.vercel.app",
     ],
-    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,5 +39,5 @@ app.include_router(api_router)
 def root():
     return {
         "message": "Panopticon API Running 🚀",
-        "version": settings.VERSION
+        "version": settings.VERSION,
     }
