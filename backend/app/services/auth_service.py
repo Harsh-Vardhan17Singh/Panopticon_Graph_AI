@@ -25,9 +25,6 @@ class AuthService:
         db: Session,
         user_data: UserRegister,
     ) -> User:
-        """
-        Register a new user.
-        """
 
         existing_user = (
             db.query(User)
@@ -71,25 +68,29 @@ class AuthService:
         db: Session,
         login_data: UserLogin,
     ) -> str:
-        """
-        Authenticate a user and return a JWT access token.
-        """
 
         user = (
             db.query(User)
-            .filter(User.email == login_data.email)
+            .filter(
+                User.email == login_data.email
+            )
             .first()
         )
 
+        # Don't reveal whether the email exists.
         if user is None:
-            raise ValueError("Invalid email or password")
+            raise ValueError(
+                "Invalid email or password"
+            )
 
-        # IMPORTANT: verify the actual password
+        # ACTUALLY VERIFY PASSWORD
         if not verify_password(
             login_data.password,
             user.password,
         ):
-            raise ValueError("Invalid email or password")
+            raise ValueError(
+                "Invalid email or password"
+            )
 
         access_token = create_access_token(
             data={

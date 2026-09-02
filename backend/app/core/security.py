@@ -1,30 +1,35 @@
 from datetime import datetime, timedelta, timezone
-from jose import JWTError, jwt
-from passlib.context import CryptContext
 import os
+
+import bcrypt
+from jose import JWTError, jwt
 
 
 SECRET_KEY = os.getenv(
     "SECRET_KEY",
-    "dev-only-secret-key"
+    "dev-only-secret-key-change-this-in-production",
 )
 
 ALGORITHM = "HS256"
-
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
-
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto",
-)
 
 
 def hash_password(password: str) -> str:
     """
-    Convert a plain password into a hashed password.
+    Hash a plain-text password using bcrypt.
     """
-    return pwd_context.hash(password)
+
+    password_bytes = password.encode("utf-8")
+
+    if len(password_bytes) > 72:
+        raise ValueError("Password cannot be longer than 72 bytes.")
+
+    hashed = bcrypt.hashpw(
+        password_bytes,
+        bcrypt.gensalt(),
+    )
+
+    return hashed.decode("utf-8")
 
 
 def verify_password(
@@ -32,48 +37,52 @@ def verify_password(
     hashed_password: str,
 ) -> bool:
     """
-    Verify whether a plain password matches its hashed version.
+    Verify a plain-text password against a bcrypt hash.
     """
-    return pwd_context.verify(
-        plain_password,
-        hashed_password,
-    )
+
+    try:
+        password_bytes = plain_password.encode("utf-8")
+        hashed_bytes = hashed_password.encode("utf-8")
+
+        if len(password_bytes) > 72:
+            return False
+
+        return bcrypt.checkpw(
+            password_bytes,
+            hashed_bytes,
+        )
+
+    except (ValueError, TypeError):
+        return False
 
 
-def create_access_token(
-    data: dict,
-) -> str:
+def create_access_token(data: dict) -> str:
     """
     Create a JWT access token.
     """
+
     payload = data.copy()
 
-    expire = (
-        datetime.now(timezone.utc)
-        + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
     payload.update({
-        "exp": expire
+        "exp": expire,
     })
 
-    access_token = jwt.encode(
+    return jwt.encode(
         payload,
         SECRET_KEY,
         algorithm=ALGORITHM,
     )
 
-    return access_token
 
-
-def decode_access_token(
-    token: str,
-) -> dict | None:
+def decode_access_token(token: str) -> dict | None:
     """
     Decode and verify a JWT access token.
     """
+
     try:
         payload = jwt.decode(
             token,

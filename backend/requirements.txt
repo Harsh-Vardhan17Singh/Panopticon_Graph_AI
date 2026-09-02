@@ -4,7 +4,6 @@ sqlalchemy
 pydantic
 pydantic-settings
 python-jose[cryptography]
-passlib=1.7.4
 bcrypt=4.0.1
 python-multipart
 email-validator
