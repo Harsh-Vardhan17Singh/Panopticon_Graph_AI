@@ -1,13 +1,16 @@
 from datetime import datetime, timedelta, timezone
-
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-
-
 import os
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-secret-key")
+
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "dev-only-secret-key"
+)
+
 ALGORITHM = "HS256"
+
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 
@@ -21,7 +24,6 @@ def hash_password(password: str) -> str:
     """
     Convert a plain password into a hashed password.
     """
-
     return pwd_context.hash(password)
 
 
@@ -32,7 +34,6 @@ def verify_password(
     """
     Verify whether a plain password matches its hashed version.
     """
-
     return pwd_context.verify(
         plain_password,
         hashed_password,
@@ -45,11 +46,13 @@ def create_access_token(
     """
     Create a JWT access token.
     """
-
     payload = data.copy()
 
-    expire = datetime.now(timezone.utc) + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+    expire = (
+        datetime.now(timezone.utc)
+        + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
     )
 
     payload.update({
@@ -71,7 +74,6 @@ def decode_access_token(
     """
     Decode and verify a JWT access token.
     """
-
     try:
         payload = jwt.decode(
             token,
