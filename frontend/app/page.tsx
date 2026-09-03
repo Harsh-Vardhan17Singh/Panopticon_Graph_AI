@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect, useRef } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://panopticon-graph-ai.onrender.com"
+).replace(/\/$/, "");
 
 // ==========================================
 // --- Mock Data & Type Definitions ---
@@ -396,7 +399,7 @@ useEffect(() => {
       setAlertsError("");
 
       const response = await fetch(
-        `{API_URL}/api/v1/alerts`,
+        `${API_URL}/api/v1/alerts`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -676,12 +679,18 @@ useEffect(() => {
   setAuthError("");
 
   try {
+    console.log("Panopticon API URL:", API_URL);
+
+    // ==========================================
+    // LOGIN
+    // ==========================================
     const response = await fetch(
       `${API_URL}/api/v1/auth/login`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           email: userId,
@@ -691,7 +700,8 @@ useEffect(() => {
     );
 
     const data = await response.json();
-    console.log("LOGIN API RESPONSE:",data);
+
+    console.log("Login response:", response.status, data);
 
     if (!response.ok) {
       setAuthError(
@@ -700,34 +710,60 @@ useEffect(() => {
       return;
     }
 
+    if (!data.access_token) {
+      setAuthError("Login succeeded but no access token was returned.");
+      return;
+    }
+
+    // ==========================================
+    // SAVE TOKEN
+    // ==========================================
     setAccessToken(data.access_token);
-localStorage.setItem("access_token", data.access_token);
+    localStorage.setItem(
+      "access_token",
+      data.access_token
+    );
 
-const profileResponse = await fetch(
-  `${API_URL}/api/v1/auth/me`,
-  {
-    headers: {
-      Authorization: `Bearer ${data.access_token}`,
-      Accept: "application/json",
-    },
-  }
-);
+    // ==========================================
+    // GET CURRENT USER
+    // ==========================================
+    const profileResponse = await fetch(
+      `${API_URL}/api/v1/auth/me`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+          Accept: "application/json",
+        },
+      }
+    );
 
-const profileData = await profileResponse.json();
+    const profileData = await profileResponse.json();
 
-if (!profileResponse.ok) {
-  localStorage.removeItem("access_token");
+    console.log(
+      "Profile response:",
+      profileResponse.status,
+      profileData
+    );
 
-  setAuthError(
-    profileData.detail || "Unable to verify user profile."
-  );
+    if (!profileResponse.ok) {
+      localStorage.removeItem("access_token");
+      setAccessToken("");
 
-  return;
-}
+      setAuthError(
+        profileData.detail ||
+        `Login succeeded, but /auth/me failed (${profileResponse.status}).`
+      );
 
-setCurrentUser(profileData);
+      return;
+    }
 
-setCurrentView("handshake");
+    // ==========================================
+    // SUCCESS
+    // ==========================================
+    setCurrentUser(profileData);
+
+    setCurrentView("handshake");
 
   } catch (error) {
     console.error("Login error:", error);
@@ -737,20 +773,17 @@ setCurrentView("handshake");
     );
   }
 };
-
   const handleLogout = () => {
-    setAccessToken("");
-    setCurrentUser(null);
-    setSelectedNode(null);
-    setSelectedNodeDetails(null);
-    
-    localStorage.removeItem("access_token");
+  setAccessToken("");
+  setCurrentUser(null);
 
-    setCurrentView("landing");
-    setUserId("");
-    setSecretCode("");
-    setAuthError("");
-  };
+  localStorage.removeItem("access_token");
+
+  setCurrentView("landing");
+  setUserId("");
+  setSecretCode("");
+  setAuthError("");
+};
 
   const triggerSimulationEvent = (type: "FRAUD" | "NORMAL" | "LOUVAIN") => {
     const txTime = new Date().toTimeString().split(" ")[0];
