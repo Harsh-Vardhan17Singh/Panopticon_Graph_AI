@@ -24,14 +24,17 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+
+        # Vercel production URL
         "https://panopticon-graphai.vercel.app",
+
+        # Vercel deployment URL currently being used
+        "https://panopticon-graph-ai-git-main-harsh-vardhan17singh-projects.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 app.include_router(api_router)
 
 
