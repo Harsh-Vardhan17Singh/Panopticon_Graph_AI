@@ -7,6 +7,7 @@ from app.db.init_db import create_tables
 from app.db.seed import seed_database
 
 
+# Database initialization
 create_tables()
 seed_database()
 
@@ -19,22 +20,27 @@ app = FastAPI(
 )
 
 
+# =========================
+# CORS CONFIGURATION
+# =========================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://panopticon-graph-ai.vercel.app",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-
-        # Vercel production URL
-        "https://panopticon-graphai.vercel.app",
-
-        # Vercel deployment URL currently being used
-        "https://panopticon-graph-ai-git-main-harsh-vardhan17singh-projects.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# =========================
+# API ROUTES
+# =========================
+
 app.include_router(api_router)
 
 
@@ -43,4 +49,11 @@ def root():
     return {
         "message": "Panopticon API Running 🚀",
         "version": settings.VERSION,
+    }
+
+@app.get("/cors-test")
+def cors_test():
+    return{
+        "cors":"working",
+        "origin":"panopticon-graph-ai.vercel.app",
     }
