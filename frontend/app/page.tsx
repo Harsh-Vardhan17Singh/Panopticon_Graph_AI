@@ -685,7 +685,7 @@ useEffect(() => {
     // LOGIN
     // ==========================================
     const response = await fetch(
-      `${API_URL}/api/v1/auth/login`,
+      "https://panopticon-graph-ai.onrender.com/api/v1/auth/login",
       {
         method: "POST",
         headers: {
