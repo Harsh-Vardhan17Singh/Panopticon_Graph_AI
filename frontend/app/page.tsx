@@ -705,8 +705,12 @@ useEffect(() => {
 
     if (!response.ok) {
       setAuthError(
-        data.detail || "INVALID CREDENTIALS. Access denied."
-      );
+  Array.isArray(data.detail)
+    ? data.detail
+        .map((err: any) => err.msg || "Invalid request")
+        .join(", ")
+    : String(data.detail || "INVALID CREDENTIALS. Access denied.")
+);
       return;
     }
 
