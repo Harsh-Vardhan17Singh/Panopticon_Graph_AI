@@ -2,11 +2,11 @@
 
 > Enterprise Financial Fraud Detection and Intelligence Platform.
 
-Panopticon is a fraud intelligence platform designed to help identify suspicious financial activity through transaction monitoring, risk scoring, authentication, role-based access control, and future Graph Intelligence and AI capabilities.
+Panopticon is a full-stack fraud intelligence platform designed to identify and analyze suspicious financial activity through transaction monitoring, automated risk scoring, authentication, role-based access control, and relationship-based fraud analysis.
 
-The platform is being developed as a full-stack application with a Next.js frontend and FastAPI backend.
+The platform combines a **Next.js frontend** with a **FastAPI backend** and is being developed toward an enterprise-grade fraud intelligence system.
 
-Instead of treating every transaction as an isolated event, the long-term goal of Panopticon is to analyze relationships between accounts, users, devices, merchants, IP addresses, and transactions to identify suspicious patterns and coordinated fraud networks.
+Instead of treating every transaction as an isolated event, Panopticon is designed to analyze relationships between accounts, users, devices, merchants, and transactions to identify suspicious patterns and coordinated fraud networks.
 
 ---
 
@@ -17,107 +17,107 @@ Instead of treating every transaction as an isolated event, the long-term goal o
 **Status:** 🟢 Active Development
 
 **Current Phase:**
-> Backend Fraud Detection Foundation completed. Currently preparing frontend and backend integration.
+
+> Backend fraud detection foundation completed. Frontend and backend integration currently in progress.
 
 ### Current Progress
 
 - ✅ Core backend architecture
-- ✅ Database models and relationships
+- ✅ SQLAlchemy database foundation
+- ✅ Organization management
+- ✅ User management
+- ✅ Account model
+- ✅ Merchant model
+- ✅ Device model
+- ✅ Transaction model
+- ✅ Database relationships
 - ✅ JWT authentication
+- ✅ Password hashing and verification
 - ✅ Role-Based Access Control
-- ✅ Transaction APIs
+- ✅ Transaction creation API
+- ✅ Transaction retrieval API
+- ✅ Transaction lookup by ID
+- ✅ Suspicious transaction API
+- ✅ Transaction pagination and filtering
 - ✅ Automatic rule-based risk scoring
 - ✅ LOW / MEDIUM / HIGH risk classification
 - ✅ Suspicious transaction detection
-- ✅ Transaction filtering and pagination
-- 🚧 Dashboard API
-- 🚧 Frontend-backend integration
+- ✅ Graph API foundation
+- ✅ Graph node details API
+- ✅ Alerts API foundation
+- 🚧 Dashboard integration
+- 🚧 Frontend-backend authentication flow
+- 🚧 Live transaction visualization
+- 🚧 Graph Explorer UI
+- ⏳ Neo4j graph integration
 - ⏳ Graph Intelligence
+- ⏳ Graph Neural Networks
 - ⏳ AI / ML fraud detection
 
 ---
 
 # 📌 Vision
 
-Panopticon aims to become an enterprise fraud intelligence platform capable of:
+Panopticon aims to evolve into an enterprise fraud intelligence platform capable of providing:
 
 - Real-Time Transaction Monitoring
-- Fraud Detection
+- Automated Fraud Detection
 - Risk Scoring
 - Suspicious Transaction Detection
 - Fraud Ring Detection
+- Graph-Based Fraud Analysis
 - Graph Intelligence
 - Graph Neural Networks
 - Explainable AI
 - Interactive Investigation Dashboard
-- Fraud Alerts
+- Real-Time Fraud Alerts
 - Case Management
-- Analytics
+- Fraud Analytics
 - Enterprise APIs
 
----
-
-# 🏗️ Tech Stack
-
-## Frontend
-
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- Three.js *(planned for advanced visualisation)*
-
-## Backend
-
-- FastAPI
-- Python
-- SQLAlchemy
-- Pydantic
-- JWT Authentication
-- Passlib / Bcrypt
-- SQLite *(Development Database)*
-
-## Planned Infrastructure
-
-- PostgreSQL
-- Neo4j
-- Redis
-- Docker
-- AWS
-- PyTorch
-- PyTorch Geometric
+The long-term objective is to provide investigators with a complete view of suspicious activity and the relationships connecting different entities within a financial ecosystem.
 
 ---
 
-# 📁 Project Structure
+# 🧠 Fraud Detection Approach
+
+Panopticon follows a layered fraud detection architecture.
 
 ```text
-Panopticon/
-│
-├── frontend/
-│   ├── app/
-│   ├── public/
-│   ├── package.json
-│   └── README.md
-│
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   ├── core/
-│   │   ├── db/
-│   │   ├── models/
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   ├── graph/
-│   │   ├── ml/
-│   │   ├── middleware/
-│   │   ├── utils/
-│   │   └── main.py
-│   │
-│   ├── requirements.txt
-│   └── .env
-│
-├── tests/
-│
-└── README.md
+Financial Transaction
+        │
+        ▼
+Transaction API
+        │
+        ▼
+Validation & Processing
+        │
+        ▼
+Risk Scoring Engine
+        │
+        ├── Amount Analysis
+        ├── Transaction Pattern Analysis
+        ├── Account Behaviour
+        └── Suspicious Activity Rules
+        │
+        ▼
+Risk Classification
+        │
+        ├── LOW
+        ├── MEDIUM
+        └── HIGH
+        │
+        ▼
+Fraud Monitoring
+        │
+        ├── Alerts
+        ├── Dashboard
+        └── Investigation
+        │
+        ▼
+Future Graph Intelligence
+        │
+        ├── Account Relationships
+        ├── Device Relationships
+        ├── Merchant Relationships
+        └── Fraud Networks
