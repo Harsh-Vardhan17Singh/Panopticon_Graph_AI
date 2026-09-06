@@ -1,123 +1,114 @@
 # 🛡️ Panopticon
 
-> Enterprise Financial Fraud Detection and Intelligence Platform.
+> **Enterprise Financial Fraud Detection and Intelligence Platform**
 
-Panopticon is a full-stack fraud intelligence platform designed to identify and analyze suspicious financial activity through transaction monitoring, automated risk scoring, authentication, role-based access control, and relationship-based fraud analysis.
+Panopticon is a full-stack fraud intelligence platform designed to detect, analyze, and investigate suspicious financial activity.
 
-The platform combines a **Next.js frontend** with a **FastAPI backend** and is being developed toward an enterprise-grade fraud intelligence system.
+The platform combines transaction monitoring, risk scoring, authentication, role-based access control, graph intelligence, and machine learning into a unified fraud investigation system.
 
-Instead of treating every transaction as an isolated event, Panopticon is designed to analyze relationships between accounts, users, devices, merchants, and transactions to identify suspicious patterns and coordinated fraud networks.
+The long-term objective is to move beyond isolated transaction-level fraud detection and understand the **relationships between accounts, users, devices, merchants, transactions, and other financial entities**.
 
 ---
 
-# 🚀 Current Status
+# 🚀 Project Status
 
 **Version:** `v0.3.0-alpha`
 
 **Status:** 🟢 Active Development
 
-**Current Phase:**
+### Current Phase
 
-> Backend fraud detection foundation completed. Frontend and backend integration currently in progress.
+> **Fraud Detection Foundation + Full-Stack Integration**
 
-### Current Progress
+The core backend fraud detection foundation is operational, while the frontend dashboard and advanced intelligence capabilities continue to be developed.
 
-- ✅ Core backend architecture
-- ✅ SQLAlchemy database foundation
-- ✅ Organization management
-- ✅ User management
+### Completed
+
+- ✅ Full-stack project architecture
+- ✅ Next.js frontend
+- ✅ FastAPI backend
+- ✅ SQLAlchemy database layer
+- ✅ Organization model
+- ✅ User model
 - ✅ Account model
 - ✅ Merchant model
 - ✅ Device model
 - ✅ Transaction model
 - ✅ Database relationships
+- ✅ Development database seeding
 - ✅ JWT authentication
-- ✅ Password hashing and verification
+- ✅ Password hashing
+- ✅ Password verification
 - ✅ Role-Based Access Control
-- ✅ Transaction creation API
-- ✅ Transaction retrieval API
-- ✅ Transaction lookup by ID
-- ✅ Suspicious transaction API
-- ✅ Transaction pagination and filtering
-- ✅ Automatic rule-based risk scoring
+- ✅ Protected API endpoints
+- ✅ Transaction APIs
+- ✅ Transaction filtering
+- ✅ Transaction pagination
+- ✅ Rule-based fraud risk scoring
 - ✅ LOW / MEDIUM / HIGH risk classification
 - ✅ Suspicious transaction detection
 - ✅ Graph API foundation
 - ✅ Graph node details API
-- ✅ Alerts API foundation
-- 🚧 Dashboard integration
-- 🚧 Frontend-backend authentication flow
-- 🚧 Live transaction visualization
-- 🚧 Graph Explorer UI
+- ✅ Frontend authentication flow
+- ✅ Production frontend deployment foundation
+- ✅ Production backend deployment foundation
+
+### In Progress
+
+- 🚧 Dashboard API
+- 🚧 Frontend-backend data integration
+- 🚧 Interactive fraud graph
+- 🚧 Real-time monitoring
+- 🚧 Fraud analytics
+- 🚧 Alert management
+
+### Planned
+
 - ⏳ Neo4j graph integration
-- ⏳ Graph Intelligence
+- ⏳ Advanced Graph Intelligence
+- ⏳ Machine Learning fraud detection
 - ⏳ Graph Neural Networks
-- ⏳ AI / ML fraud detection
+- ⏳ Explainable AI
+- ⏳ Fraud ring detection
+- ⏳ Case management
+- ⏳ Enterprise infrastructure
 
 ---
 
-# 📌 Vision
+# 🎯 What Is Panopticon?
 
-Panopticon aims to evolve into an enterprise fraud intelligence platform capable of providing:
+Traditional fraud detection systems often evaluate transactions independently.
 
-- Real-Time Transaction Monitoring
-- Automated Fraud Detection
-- Risk Scoring
-- Suspicious Transaction Detection
-- Fraud Ring Detection
-- Graph-Based Fraud Analysis
-- Graph Intelligence
-- Graph Neural Networks
-- Explainable AI
-- Interactive Investigation Dashboard
-- Real-Time Fraud Alerts
-- Case Management
-- Fraud Analytics
-- Enterprise APIs
+Panopticon is designed around a different idea:
 
-The long-term objective is to provide investigators with a complete view of suspicious activity and the relationships connecting different entities within a financial ecosystem.
+> **Fraud is often a relationship problem, not just a transaction problem.**
 
----
+A suspicious transaction may become significantly more meaningful when viewed together with the entities connected to it.
 
-# 🧠 Fraud Detection Approach
-
-Panopticon follows a layered fraud detection architecture.
+For example:
 
 ```text
-Financial Transaction
-        │
-        ▼
-Transaction API
-        │
-        ▼
-Validation & Processing
-        │
-        ▼
-Risk Scoring Engine
-        │
-        ├── Amount Analysis
-        ├── Transaction Pattern Analysis
-        ├── Account Behaviour
-        └── Suspicious Activity Rules
-        │
-        ▼
-Risk Classification
-        │
-        ├── LOW
-        ├── MEDIUM
-        └── HIGH
-        │
-        ▼
-Fraud Monitoring
-        │
-        ├── Alerts
-        ├── Dashboard
-        └── Investigation
-        │
-        ▼
-Future Graph Intelligence
-        │
-        ├── Account Relationships
-        ├── Device Relationships
-        ├── Merchant Relationships
-        └── Fraud Networks
+                    ┌──────────────┐
+                    │     User     │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │   Account    │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │ Transaction  │
+                    └───┬────┬─────┘
+                        │    │
+             ┌──────────┘    └──────────┐
+             ▼                          ▼
+      ┌────────────┐              ┌────────────┐
+      │  Merchant  │              │   Device   │
+      └────────────┘              └──────┬─────┘
+                                         │
+                                         ▼
+                                   ┌────────────┐
+                                   │ IP Address │
+                                   └────────────┘
