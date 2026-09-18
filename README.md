@@ -83,7 +83,6 @@ Panopticon is designed around a different idea:
 
 > **Fraud is often a relationship problem, not just a transaction problem.**
 
-A suspicious transaction may become significantly more meaningful when viewed together with the entities connected to it.
 
 For example:
 
